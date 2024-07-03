@@ -1,11 +1,27 @@
 # HHP-Concert-Ticketing-Project
 
 1. [Milestone](https://github.com/users/wlgns410/projects/2/views/3)
-2. [Sequence_diagram](#sequence_diagram)
+2. [ERD](#ERD)
+3. [API-DOCS](https://week3.gitbook.io/queue)
+4. [Sequence_diagram](#sequence_diagram)
 
 <br>
 
 ---
+
+## ERD
+
+[ERD](https://dbdiagram.io/d/6683fece9939893daed56a48)는 여기서 보실 수도 있습니다.
+
+<img src="https://github.com/wlgns410/Week3/assets/81137234/dae86d14-eed4-4f5d-ac89-797907b9ad5c" width="700" height="700">
+
+<br>
+
+## API-DOCS
+
+[API 명세서](https://week3.gitbook.io/queue) 에서 보실 수 있습니다.
+
+<br>
 
 ## Sequence_diagram
 
