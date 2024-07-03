@@ -2,7 +2,8 @@
 
 1. [Milestone](https://github.com/users/wlgns410/projects/2/views/3)
 2. [ERD](#ERD)
-3. [Sequence_diagram](#sequence_diagram)
+3. [API-DOCS](https://week3.gitbook.io/queue)
+4. [Sequence_diagram](#sequence_diagram)
 
 <br>
 
@@ -13,6 +14,12 @@
 https://dbdiagram.io/d/6683fece9939893daed56a48
 
 <img src="https://github.com/wlgns410/Week3/assets/81137234/2d413199-d45c-4be5-b301-2e5aa2fa4232" width="700" height="700">
+
+<br>
+
+## API-DOCS
+
+[API 명세서](https://week3.gitbook.io/queue) 에서 보실 수 있습니다.
 
 <br>
 
