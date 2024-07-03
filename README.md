@@ -29,7 +29,7 @@
 
 ### 1. 계정 생성
 
-<img src="https://github.com/wlgns410/Week3/assets/81137234/40ba0ded-ceb5-41fc-8ea5-8d791709decc" width="500" height="500">
+<img src="https://github.com/wlgns410/Week3/assets/81137234/2de6d3d5-786c-417b-b971-2bda87de2070" width="500" height="500">
 
 <br>
 
