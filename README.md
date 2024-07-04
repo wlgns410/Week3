@@ -13,7 +13,7 @@
 
 [ERD](https://dbdiagram.io/d/6683fece9939893daed56a48)는 여기서 보실 수도 있습니다.
 
-<img src="https://github.com/wlgns410/Week3/assets/81137234/dae86d14-eed4-4f5d-ac89-797907b9ad5c" width="700" height="700">
+<img src="https://github.com/wlgns410/Week3/assets/81137234/a2e5e557-02ec-4578-a865-1f8d8e9b8fd6" width="700" height="700">
 
 <br>
 
