@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserQueueTokenResponse } from '../dtos/user-queue-token.response';
+import { UserBalanceResponse } from '../dtos/user-balance.response';
 import { ApiResponse } from '../../common/api-response';
 
 describe('UserController', () => {
@@ -43,6 +44,53 @@ describe('UserController', () => {
 
       // Then
       expect(response).toBeInstanceOf(ApiResponse);
+      expect(response.statusCode).toBe(201);
+      expect(response.message).toBe('success');
+    });
+  });
+
+  describe('유저 계좌 충전', () => {
+    it('계좌를 충전합니다.', async () => {
+      // Given
+      const userId = '123';
+
+      // When
+      const response = await userController.chargeBalance(userId, {
+        amount: 100,
+      });
+
+      // Then
+      expect(response).toBeInstanceOf(ApiResponse);
+      expect(response.statusCode).toBe(204);
+      expect(response.message).toBe('Charge Success');
+    });
+  });
+
+  describe('유저 잔액 조회', () => {
+    it('잔액을 조회합니다.', async () => {
+      // Given
+      const userId = '123';
+
+      // When
+      const response = await userController.getBalance(userId);
+
+      // Then
+      expect(response).toBeInstanceOf(ApiResponse);
+      expect(response.statusCode).toBe(200);
+      expect(response.message).toBe('success');
+      expect(response.data).toBeInstanceOf(UserBalanceResponse);
+    });
+  });
+
+  describe('유저 결제 성공', () => {
+    it('결제를 시도합니다.', async () => {
+      // Given
+      const userId = '123';
+
+      // When
+      const response = await userController.userPayment(userId);
+
+      // Then
       expect(response.statusCode).toBe(201);
       expect(response.message).toBe('success');
     });
