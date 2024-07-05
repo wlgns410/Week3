@@ -32,4 +32,19 @@ describe('UserController', () => {
       expect(response.data.token).toBe('tokentokentoken');
     });
   });
+
+  describe('유저 생성', () => {
+    it('유저를 생성합니다.', async () => {
+      // Given
+      const createUserDto = { name: 'John Doe' };
+
+      // When
+      const response = await userController.createUser(createUserDto);
+
+      // Then
+      expect(response).toBeInstanceOf(ApiResponse);
+      expect(response.statusCode).toBe(201);
+      expect(response.message).toBe('success');
+    });
+  });
 });

@@ -1,6 +1,10 @@
-import { Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UserQueueTokenResponse } from '../dtos/user-queue-token.response';
 import { ApiResponse } from '../../common/api-response';
+
+class CreateUserDto {
+  name: string;
+}
 
 @Controller('users')
 export class UserController {
@@ -21,5 +25,14 @@ export class UserController {
       'success',
       userQueueToken,
     );
+  }
+
+  @Post()
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<ApiResponse<null>> {
+    console.log(createUserDto);
+
+    return new ApiResponse<null>(201, 'success');
   }
 }
