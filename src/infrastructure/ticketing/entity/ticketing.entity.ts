@@ -6,9 +6,9 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { ConcertDate } from '../../concerts/entities/concert-date.entity';
-import { ConcertSeat } from '../../concerts/entities/concert-seat.entity';
-import { User } from '../../users/entities/user.entity';
+import { ConcertDate } from '../../concert/entity/concert-date.entity';
+import { ConcertSeat } from '../../concert/entity/concert-seat.entity';
+import { User } from '../../user/entity/user.entity';
 
 @Entity('ticketing')
 export class Ticketing {

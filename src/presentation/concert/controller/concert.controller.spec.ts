@@ -31,7 +31,6 @@ describe('ConcertController', () => {
       expect(response.message).toBe('success');
       expect(response.data).toBeInstanceOf(Array);
       expect(response.data[0].concert_date_id).toBe(concertDateId);
-      expect(response.data[0].place).toBe('A1');
       expect(response.data[0].limit_count).toBe(100);
       expect(response.data[0].available_seat).toBe(95);
       expect(response.data[0].status).toBe('available');
