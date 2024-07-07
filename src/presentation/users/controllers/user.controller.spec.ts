@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserQueueTokenResponse } from '../dtos/user-queue-token.response';
 import { UserBalanceResponse } from '../dtos/user-balance.response';
-import { ApiResponse } from '../../common/api-response';
+import { ApiResponse } from '../../../common/api-response';
 
 describe('UserController', () => {
   let userController: UserController;
