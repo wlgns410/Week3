@@ -6,8 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { ConcertDate } from '../../concert/entity/concert-date.entity';
-import { ConcertSeat } from '../../concert/entity/concert-seat.entity';
+import { ConcertDetail } from '../../concert/entity/concert-detail.entity';
 import { User } from '../../user/entity/user.entity';
 
 @Entity('ticketing')
@@ -22,19 +21,12 @@ export class Ticketing {
   @Column()
   user_id: number;
 
-  @ManyToOne(() => ConcertDate)
-  @JoinColumn({ name: 'concert_date_id' })
-  concertDate: ConcertDate;
+  @ManyToOne(() => ConcertDetail)
+  @JoinColumn({ name: 'concert_detail_id' })
+  concertDetail: ConcertDetail;
 
   @Column()
-  concert_date_id: number;
-
-  @ManyToOne(() => ConcertSeat)
-  @JoinColumn({ name: 'concert_seat_id' })
-  concertSeat: ConcertSeat;
-
-  @Column()
-  concert_seat_id: number;
+  concert_detail_id: number;
 
   @Column({ length: 20 })
   title: string;

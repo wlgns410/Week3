@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import { Concert } from './concert.entity';
 
-@Entity()
-export class ConcertDate {
+@Entity('concert_detail')
+export class ConcertDetail {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,7 +21,25 @@ export class ConcertDate {
   concert_id: number;
 
   @Column()
+  place: number;
+
+  @Column()
+  price: number;
+
+  @Column()
+  limit_count: number;
+
+  @Column()
+  available_seat: number;
+
+  @Column({ type: 'date' })
   date: Date;
+
+  @Column({ type: 'date' })
+  reservation_start_date: Date;
+
+  @Column({ type: 'date' })
+  reservation_end_date: Date;
 
   @CreateDateColumn()
   created_at: Date;

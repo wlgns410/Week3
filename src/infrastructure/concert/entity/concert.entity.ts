@@ -13,8 +13,8 @@ export class Concert {
   @Column({ type: 'varchar', length: 20 })
   title: string;
 
-  @Column({ type: 'varchar', length: 20 })
-  place: string;
+  @Column({ type: 'varchar', length: 40 })
+  description: string;
 
   @CreateDateColumn()
   created_at: Date;
