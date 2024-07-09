@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('user_balance_logs')
+@Entity()
 export class UserBalanceLog {
   @PrimaryGeneratedColumn()
   id: number;

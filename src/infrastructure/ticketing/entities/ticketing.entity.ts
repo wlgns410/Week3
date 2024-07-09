@@ -9,7 +9,7 @@ import {
 import { ConcertDetail } from '../../concert/entities/concert-detail.entity';
 import { User } from '../../user/entities/user.entity';
 
-@Entity('ticketing')
+@Entity()
 export class Ticketing {
   @PrimaryGeneratedColumn()
   id: number;

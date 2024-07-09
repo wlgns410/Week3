@@ -10,7 +10,7 @@ export enum QueueStatus {
   EXPIRED = 'EXPIRED',
 }
 
-@Entity('user')
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

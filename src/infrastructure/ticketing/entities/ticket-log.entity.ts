@@ -9,7 +9,7 @@ import {
 
 import { Ticketing } from '../entities/ticketing.entity';
 
-@Entity('ticket_log')
+@Entity()
 export class TicketLog {
   @PrimaryGeneratedColumn()
   id: number;
