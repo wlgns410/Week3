@@ -15,7 +15,7 @@ export class TicketLog {
   id: number;
 
   @ManyToOne(() => Ticketing)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'ticketing_id' })
   ticketing: Ticketing;
 
   @Column()
