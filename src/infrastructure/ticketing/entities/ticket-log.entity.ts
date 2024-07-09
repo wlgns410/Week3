@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { Ticketing } from '../entity/ticketing.entity';
+import { Ticketing } from '../entities/ticketing.entity';
 
 @Entity('ticket_log')
 export class TicketLog {

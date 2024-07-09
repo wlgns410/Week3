@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConcertController } from '../presentation/concert/controller/concert.controller';
+import { ConcertController } from '../presentation/concert/controllers/concert.controller';
 
 @Module({
   controllers: [ConcertController],

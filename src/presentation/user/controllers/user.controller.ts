@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { UserQueueTokenResponse } from '../dto/user-queue-token.response';
-import { UserBalanceResponse } from '../dto/user-balance.response';
+import { UserQueueTokenResponse } from '../dtos/user-queue-token.response';
+import { UserBalanceResponse } from '../dtos/user-balance.response';
 import { ApiResponse } from '../../../common/api-response';
 
 class CreateUserDto {

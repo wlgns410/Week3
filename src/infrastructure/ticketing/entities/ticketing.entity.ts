@@ -6,8 +6,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { ConcertDetail } from '../../concert/entity/concert-detail.entity';
-import { User } from '../../user/entity/user.entity';
+import { ConcertDetail } from '../../concert/entities/concert-detail.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Entity('ticketing')
 export class Ticketing {

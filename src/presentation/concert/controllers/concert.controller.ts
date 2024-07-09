@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ConcertDateResponse } from '../dto/concert-date.response';
-import { ConcertSeatResponse } from '../dto/concert-seat.response';
+import { ConcertDateResponse } from '../dtos/concert-date.response';
+import { ConcertSeatResponse } from '../dtos/concert-seat.response';
 import { ApiResponse } from '../../../common/api-response';
 
 @Controller('concert')

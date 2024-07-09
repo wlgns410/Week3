@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ApiResponse } from '../../../common/api-response';
-import { TicketingResponse } from '../dto/ticketing.response';
+import { TicketingResponse } from '../dtos/ticketing.response';
 
 class TicketingDto {
   id: number;
