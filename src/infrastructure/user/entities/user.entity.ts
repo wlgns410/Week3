@@ -15,28 +15,29 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: 0 })
   balance: number;
 
   @Column({ length: 50 })
   name: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   token: string;
 
   @Column({
     type: 'enum',
     enum: QueueStatus,
+    nullable: true,
   })
   queue_status: QueueStatus;
 
-  @Column()
+  @Column({ nullable: true })
   currentOrder: number;
 
-  @Column()
+  @Column({ nullable: true })
   estimated_wait_time: number;
 
-  @Column()
+  @Column({ nullable: true })
   expires_at: Date;
 
   @CreateDateColumn()
