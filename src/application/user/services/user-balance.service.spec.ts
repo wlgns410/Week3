@@ -1,11 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserBalanceService } from '../services/user-balance-charge.service';
+import { UserBalanceService } from './user-balance.service';
 import { UserBalanceRepository } from '../../../domain/user/interfaces/user-charge-repository.interface';
 import { UserBalanceChargeDto } from '../../../domain/user/entites/user-charge-balance.entity';
+import { UserBalanceSearchDto } from '../../../domain/user/entites/user-search-balance.entity';
 
 // Mock repository
 const mockUserBalanceRepository = {
   chargeBalance: jest.fn(),
+  getBalance: jest.fn(),
 };
 
 describe('UserBalanceService', () => {
@@ -60,6 +62,23 @@ describe('UserBalanceService', () => {
       await expect(
         userBalanceService.chargeBalance(userBalanceDto),
       ).rejects.toThrow('User not found');
+    });
+  });
+
+  describe('getBalance', () => {
+    it('should return user balance', async () => {
+      const userBalanceDto: UserBalanceSearchDto = {
+        userId: 1,
+      };
+
+      mockUserBalanceRepository.getBalance.mockResolvedValue(1000); // 모의 반환 값 설정
+
+      const balance = await userBalanceService.getBalance(userBalanceDto);
+
+      expect(balance).toBe(1000);
+      expect(userBalanceRepository.getBalance).toHaveBeenCalledWith(
+        userBalanceDto,
+      );
     });
   });
 });

@@ -5,6 +5,7 @@ import { User } from '../entities/user.entity';
 import { UserBalanceLog } from '../entities/user-balance-log.entity';
 import { UserBalanceRepository } from '../../../domain/user/interfaces/user-charge-repository.interface';
 import { UserBalanceChargeDto } from '../../../domain/user/entites/user-charge-balance.entity';
+import { UserBalanceSearchDto } from '../../../domain/user/entites/user-search-balance.entity';
 
 @Injectable()
 export class UserBalanceRepositoryImpl implements UserBalanceRepository {
@@ -35,5 +36,17 @@ export class UserBalanceRepositoryImpl implements UserBalanceRepository {
         await transactionManager.save(newUserLog);
       },
     );
+  }
+  async getBalance(userBalanceDto: UserBalanceSearchDto): Promise<number> {
+    const user = await this.userRepository.findOne({
+      where: { id: userBalanceDto.userId },
+      select: ['balance'],
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user.balance;
   }
 }

@@ -3,5 +3,5 @@ import { UserBalanceSearchDto } from '../entites/user-search-balance.entity';
 
 export interface UserBalanceRepository {
   chargeBalance(userBalanceChargeDto: UserBalanceChargeDto): Promise<void>;
-  //   getBalance(userBalanceSearchDto: UserBalanceSearchDto): Promise<void>;
+  getBalance(userBalanceSearchDto: UserBalanceSearchDto): Promise<number>;
 }
