@@ -4,13 +4,12 @@ import { UserCreateService } from '../application/user/services/user-create.serv
 import { UserCreateRepositoryImpl } from '../infrastructure/user/repositories/user-create-repository.impl';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../infrastructure/user/entities/user.entity';
-import { UserRepository } from '../domain/user/interfaces/user-create-repository.interface';
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   providers: [
     UserCreateService,
     {
-      provide: 'UserRepository',
+      provide: 'UserCreateRepository',
       useClass: UserCreateRepositoryImpl,
     },
   ],
