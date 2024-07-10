@@ -10,9 +10,7 @@ export class UserCreateRepositoryImpl implements UserCreateRepository {
   constructor(
     @InjectRepository(User)
     private readonly userCreateRepository: Repository<User>,
-  ) {
-    console.log('userCreateRepository : ', userCreateRepository);
-  }
+  ) {}
 
   async createUser(userCreateDto: UserCreateDto): Promise<void> {
     return await this.userCreateRepository.manager.transaction(

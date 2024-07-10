@@ -17,11 +17,11 @@ export class UserBalanceLog {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ name: 'user_id' })
+  @Column()
   user_id: number;
 
   @Column()
-  amout: number;
+  amount: number;
 
   @Column({ type: 'enum', enum: [`CHARGE`, `USE`, `REFUND`] })
   transactionType: `CHARGE` | `USE` | `REFUND`;
