@@ -6,7 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../infrastructure/user/entities/user.entity';
 import { UserBalanceLog } from '../infrastructure/user/entities/user-balance-log.entity';
 import { UserBalanceRepositoryImpl } from '../infrastructure/user/repositories/user-balance-repository.impl';
-import { UserBalanceService } from 'src/application/user/services/user-balance.service';
+import { UserBalanceService } from '../application//user/services/user-balance.service';
+import { UserQueueOrderService } from '../application/user/services/user-queue.service';
+import { UserQueueOrderRepositoryImpl } from '../infrastructure/user/repositories/user-queueing-token-repository.impl';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, UserBalanceLog])],
@@ -20,6 +22,11 @@ import { UserBalanceService } from 'src/application/user/services/user-balance.s
     {
       provide: 'UserBalanceRepository',
       useClass: UserBalanceRepositoryImpl,
+    },
+    UserQueueOrderService,
+    {
+      provide: 'UserQueueOrderRepository',
+      useClass: UserQueueOrderRepositoryImpl,
     },
   ],
   controllers: [UserController],
