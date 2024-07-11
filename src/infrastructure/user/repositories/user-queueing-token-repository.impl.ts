@@ -5,6 +5,7 @@ import { QueueStatus, User } from '../entities/user.entity';
 import { UserQueueOrderRepository } from '../../../domain/user/interfaces/user-queue-repository.interface';
 import { UserQueueDto } from '../../../domain/user/entites/user-queue.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { UserQueueStatusDto } from '../../../domain/user/entites/user-queue.entity';
 
 @Injectable()
 export class UserQueueOrderRepositoryImpl implements UserQueueOrderRepository {
@@ -63,6 +64,20 @@ export class UserQueueOrderRepositoryImpl implements UserQueueOrderRepository {
           await manager.save(user);
         }),
       );
+    });
+  }
+
+  async getQueueStatus(
+    userQueueDto: UserQueueDto,
+  ): Promise<UserQueueStatusDto | undefined> {
+    return this.userQueueRepository.findOne({
+      where: { id: userQueueDto.userId },
+      select: [
+        'queue_status',
+        'currentOrder',
+        'estimated_wait_time',
+        'expires_at',
+      ],
     });
   }
 }
