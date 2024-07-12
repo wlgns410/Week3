@@ -21,7 +21,7 @@ export class ConcertDetail {
   concert_id: number;
 
   @Column()
-  place: number;
+  place: string;
 
   @Column()
   price: number;

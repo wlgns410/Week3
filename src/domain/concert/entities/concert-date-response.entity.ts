@@ -1,5 +1,5 @@
 export class ConcertResponseDto {
-  place: number;
+  place: string;
   price: number;
   limit_count: number;
   date: Date;
