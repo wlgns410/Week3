@@ -9,6 +9,12 @@ import {
 import { ConcertDetail } from '../../concert/entities/concert-detail.entity';
 import { User } from '../../user/entities/user.entity';
 
+export enum SeatStatus {
+  WAITING = 'WAITING',
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
+}
+
 @Entity()
 export class Ticketing {
   @PrimaryGeneratedColumn()
@@ -31,27 +37,21 @@ export class Ticketing {
   @Column({ length: 20 })
   title: string;
 
-  @Column({ length: 20 })
-  place: string;
+  @Column()
+  place: number;
 
   @Column()
   price: number;
 
   @Column({
     type: 'enum',
-    enum: ['RESERVED', 'CONFIRMED', 'CANCELLED'],
+    enum: SeatStatus,
   })
-  status: string;
-
-  @Column()
-  reservation_start_at: Date;
-
-  @Column()
-  reservation_end_at: Date;
+  status: SeatStatus;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at: Date; // 결제 가능 시간 시작으로도 사용 가능
 
   @Column()
-  expired_at: Date;
+  expired_at: Date; // 결제 가능 시간 끝
 }
