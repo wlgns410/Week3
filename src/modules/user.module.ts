@@ -9,9 +9,12 @@ import { UserBalanceRepositoryImpl } from '../infrastructure/user/repositories/u
 import { UserBalanceService } from '../application//user/services/user-balance.service';
 import { UserQueueOrderService } from '../application/user/services/user-queue.service';
 import { UserQueueOrderRepositoryImpl } from '../infrastructure/user/repositories/user-queueing-token-repository.impl';
+import { UserPaymentService } from '../application/user/services/user-payment.service';
+import { UserPaymentRepositoryImpl } from '../infrastructure/user/repositories/user-payment-repository.impl';
+import { Ticketing } from '../infrastructure/ticketing/entities/ticketing.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserBalanceLog])],
+  imports: [TypeOrmModule.forFeature([User, UserBalanceLog, Ticketing])],
   providers: [
     UserCreateService,
     {
@@ -27,6 +30,11 @@ import { UserQueueOrderRepositoryImpl } from '../infrastructure/user/repositorie
     {
       provide: 'UserQueueOrderRepository',
       useClass: UserQueueOrderRepositoryImpl,
+    },
+    UserPaymentService,
+    {
+      provide: 'UserPaymentRepository',
+      useClass: UserPaymentRepositoryImpl,
     },
   ],
   controllers: [UserController],
