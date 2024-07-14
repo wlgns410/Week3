@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { TicketingRepository } from '../../../domain/ticketing/interfaces/ticketing-repository.interface';
 import { LessThan, Repository } from 'typeorm';
-import { SeatStatus, Ticketing } from '../entities/ticketing.entity';
+import { Ticketing, SeatStatus } from '../entities/ticketing.entity';
 import { TicketLog } from '../entities/ticket-log.entity';
 import { TicketDto } from '../../../domain/ticketing/entities/ticketing-request.entity';
 import { TicketResponseDto } from '../../../domain/ticketing/entities/ticketing-response.entity';
@@ -18,10 +18,10 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 @Injectable()
 export class TicketingRepositoryImpl implements TicketingRepository {
   constructor(
-    @InjectRepository(Ticketing)
-    private readonly ticketingRepository: Repository<Ticketing>,
     @InjectRepository(TicketLog)
     private readonly ticketLogRepository: Repository<TicketLog>,
+    @InjectRepository(Ticketing)
+    private readonly ticketing: Repository<Ticketing>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(ConcertDetail)

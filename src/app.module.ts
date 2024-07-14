@@ -5,12 +5,12 @@ import { UserModule } from './modules/user.module';
 import { TicketingModule } from './modules/ticketing.module';
 import { DatabaseModule } from './libs/datasource/module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeormConfig } from './config/typeorm-config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    TypeOrmModule.forRoot(typeormConfig),
     ScheduleModule.forRoot(),
     ConcertModule,
     TicketingModule,

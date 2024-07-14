@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  BeforeInsert,
 } from 'typeorm';
 import { ConcertDetail } from '../../concert/entities/concert-detail.entity';
 import { User } from '../../user/entities/user.entity';
@@ -46,6 +47,7 @@ export class Ticketing {
   @Column({
     type: 'enum',
     enum: SeatStatus,
+    default: SeatStatus.WAITING,
   })
   status: SeatStatus;
 
@@ -54,4 +56,11 @@ export class Ticketing {
 
   @Column()
   expired_at: Date; // 결제 가능 시간 끝
+
+  @BeforeInsert()
+  setExpirationDate() {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 5);
+    this.expired_at = now;
+  }
 }

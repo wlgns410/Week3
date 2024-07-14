@@ -27,6 +27,9 @@ export class ConcertDetail {
   price: number;
 
   @Column()
+  title: string;
+
+  @Column()
   limit_count: number;
 
   @Column()
