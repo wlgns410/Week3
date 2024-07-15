@@ -9,7 +9,7 @@ import {
 export const TicketingRepositorySymbol = Symbol.for('TicketingRepository');
 
 export interface TicketingRepository {
-  reservationTicket(ticketDto: TicketDto): Promise<TicketResponseDto>;
+  // reservationTicket(ticketDto: TicketDto): Promise<TicketResponseDto>;
 
   insert(
     ticketing: TicketingRequestDto,

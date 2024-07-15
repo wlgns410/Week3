@@ -18,9 +18,9 @@ export class TicketingService {
     private readonly ticketingRepository: TicketingRepository,
   ) {}
 
-  async reservationTicket(ticketDto: TicketDto): Promise<TicketResponseDto> {
-    return await this.ticketingRepository.reservationTicket(ticketDto);
-  }
+  // async reservationTicket(ticketDto: TicketDto): Promise<TicketResponseDto> {
+  //   return await this.ticketingRepository.reservationTicket(ticketDto);
+  // }
 
   async changeStatus(now: Date, manager?: EntityManager): Promise<void> {
     const expiredTickets = await this.ticketingRepository.findExpiredTickets(

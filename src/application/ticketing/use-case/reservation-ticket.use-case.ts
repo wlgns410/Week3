@@ -12,9 +12,9 @@ export class ReservationTicketUseCase {
     private readonly dataSource: DataSource,
   ) {}
 
-  async reserve(ticketDto: TicketDto): Promise<TicketResponseDto> {
-    return await this.ticketingService.reservationTicket(ticketDto);
-  }
+  // async reserve(ticketDto: TicketDto): Promise<TicketResponseDto> {
+  //   return await this.ticketingService.reservationTicket(ticketDto);
+  // }
 
   // async reservation(ticketDto: TicketDto): Promise<TicketResponseDto> {
   //   return await this.ticketingService.reservationTicket(ticketDto);

@@ -5,10 +5,10 @@ import { ConcertDetail } from '../infrastructure/concert/entities/concert-detail
 import { TicketLog } from '../infrastructure/Ticketing/entities/ticket-log.entity';
 import { User } from '../infrastructure/User/entities/user.entity';
 import { TicketingService } from '../application/ticketing/services/ticketing.service';
-import { TicketingRepositoryImpl } from '../infrastructure/ticketing/repositories/ticketing-repository.impl';
 import { TicketingController } from '../presentation/ticketing/controllers/ticketing.controller';
 import { ReservationTicketUseCase } from '../application/ticketing/use-case/reservation-ticket.use-case';
 import { TicketingRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-repository.interface';
+import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-repository.implementation';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Ticketing, TicketLog, User, ConcertDetail]),
@@ -18,14 +18,14 @@ import { TicketingRepositorySymbol } from '../domain/ticketing/interfaces/ticket
     TicketingService,
     {
       provide: TicketingRepositorySymbol,
-      useClass: TicketingRepositoryImpl,
+      useClass: TicketingRepositoryImplementation,
     },
   ],
   exports: [
     TicketingService,
     {
       provide: TicketingRepositorySymbol,
-      useClass: TicketingRepositoryImpl,
+      useClass: TicketingRepositoryImplementation,
     },
   ],
   controllers: [TicketingController],
