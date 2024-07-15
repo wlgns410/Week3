@@ -1,34 +1,80 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ConcertDateResponse } from '../dtos/concert-date.response';
-import { ConcertSeatResponse } from '../dtos/concert-seat.response';
+import { Body, Controller, Post, Get, Query } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse as SwaggerApiResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
+import { ConcertUseCase } from '../../../application/concert/use-case/concert-detail.use-case';
+import { ConcertResponseDto } from '../dtos/concert-date-response.entity';
+import { ConcertSeatResponseDto } from '../dtos/concert-seat-response.entity';
 import { ApiResponse } from '../../../common/api-response';
 
-@Controller('concert')
+@ApiTags('concerts')
+@Controller('concerts')
 export class ConcertController {
-  @Get(':concertId/reservation/date')
-  async getReservationDates(
-    @Param('concertId') concertId: number,
-  ): Promise<ApiResponse<ConcertDateResponse[]>> {
-    const concertDates: ConcertDateResponse[] = [
-      {
-        id: 1,
-        concert_id: concertId,
-        date: '2024-07-01T19:00:00',
-        created_at: '2024-06-01T10:00:00',
-      },
-    ];
+  constructor(private readonly concertUseCase: ConcertUseCase) {}
 
-    return new ApiResponse<ConcertDateResponse[]>(200, 'success', concertDates);
+  @ApiOperation({ summary: 'Get a list of concerts' })
+  @ApiQuery({
+    name: 'concertId',
+    required: true,
+    type: Number,
+    description: 'The ID of the concert',
+  })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'List of concerts retrieved successfully',
+    type: [ConcertResponseDto],
+    schema: {
+      example: {
+        statusCode: 200,
+        message: 'success',
+      },
+    },
+  })
+  @Get('list')
+  async getConcertList(
+    @Query('concertId') concertId: number,
+  ): Promise<ApiResponse<ConcertResponseDto[]>> {
+    const concertList =
+      await this.concertUseCase.executeGetConcertList(concertId);
+    return new ApiResponse<ConcertResponseDto[]>(200, 'success', concertList);
   }
 
-  @Get('concertDate/:concertDateId/reservation/seat')
-  async getConcertSeats(
-    @Param('concertDateId') concertDateId: number,
-  ): Promise<ApiResponse<ConcertSeatResponse[]>> {
-    const seats: ConcertSeatResponse[] = [
-      new ConcertSeatResponse(1, concertDateId, 100, 95, 1, 'available'),
-    ];
-
-    return new ApiResponse<ConcertSeatResponse[]>(200, 'success', seats);
+  @ApiOperation({ summary: 'Get a list of concert seats' })
+  @ApiQuery({
+    name: 'concertDetailId',
+    required: true,
+    type: Number,
+    description: 'The ID of the concert detail',
+  })
+  @ApiQuery({
+    name: 'date',
+    required: true,
+    type: String,
+    description: 'The date of the concert',
+  })
+  @SwaggerApiResponse({
+    status: 200,
+    description: 'List of concert seats retrieved successfully',
+    type: [ConcertSeatResponseDto],
+    schema: {
+      example: {
+        statusCode: 200,
+        message: 'success',
+      },
+    },
+  })
+  @Get('seats')
+  async getConcertSeatList(
+    @Query('concertDetailId') concertDetailId: number,
+    @Query('date') date: Date,
+  ): Promise<ApiResponse<ConcertSeatResponseDto[]>> {
+    const seatList = await this.concertUseCase.executeGetConcertSeatList(
+      concertDetailId,
+      date,
+    );
+    return new ApiResponse<ConcertSeatResponseDto[]>(200, 'success', seatList);
   }
 }

@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { TicketingService } from '../services/ticketing.service';
-import { TicketDto } from '../../../domain/ticketing/entities/ticketing-request.entity';
-import { TicketResponseDto } from '../../../domain/ticketing/entities/ticketing-response.entity';
-import { DataSource, EntityManager } from 'typeorm';
-import { typeormConfig } from '../../../config/typeorm-config';
+import { DataSource } from 'typeorm';
+import { TicketDto } from 'src/infrastructure/ticketing/entities/ticketing-request.entity';
+import { TicketResponseDto } from 'src/infrastructure/ticketing/entities/ticketing-response.entity';
 
 @Injectable()
 export class ReservationTicketUseCase {
@@ -11,14 +10,6 @@ export class ReservationTicketUseCase {
     @Inject() private readonly ticketingService: TicketingService,
     private readonly dataSource: DataSource,
   ) {}
-
-  // async reserve(ticketDto: TicketDto): Promise<TicketResponseDto> {
-  //   return await this.ticketingService.reservationTicket(ticketDto);
-  // }
-
-  // async reservation(ticketDto: TicketDto): Promise<TicketResponseDto> {
-  //   return await this.ticketingService.reservationTicket(ticketDto);
-  // }
 
   async changeStatusExcute(now: Date): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
@@ -31,6 +22,29 @@ export class ReservationTicketUseCase {
       await this.ticketingService.changeStatus(now, manager);
 
       await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async executeReservation(ticketDto: TicketDto): Promise<TicketResponseDto> {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const manager = queryRunner.manager;
+      const result = await this.ticketingService.reservationTicket(
+        ticketDto,
+        manager,
+      );
+
+      await queryRunner.commitTransaction();
+      return result;
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;

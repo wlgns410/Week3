@@ -9,6 +9,14 @@ import { TicketingController } from '../presentation/ticketing/controllers/ticke
 import { ReservationTicketUseCase } from '../application/ticketing/use-case/reservation-ticket.use-case';
 import { TicketingRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-repository.interface';
 import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-repository.implementation';
+import { TicketingScheduler } from '../presentation/ticketing/schedulers/ticketing.scheduler';
+import { UserRepositorySymbol } from '../domain/user/interfaces/user-repository.interface';
+import { UserRepositoryImplementation } from '../infrastructure/user/repositories/user-repository.implementation';
+import { ConcertDetailRepositorySymbol } from '../domain/concert/interfaces/concert-detail-repository.interface';
+import { ConcertDetailRepositoryImpl } from '../infrastructure/concert/repositories/concert-repostiory.impl';
+import { TicketingLogRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-log-repository.interface';
+import { TicketingLogRepositoryImpl } from '../infrastructure/ticketing/repositories/ticketing-log-repository.implementation';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Ticketing, TicketLog, User, ConcertDetail]),
@@ -16,9 +24,22 @@ import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/r
   providers: [
     ReservationTicketUseCase,
     TicketingService,
+    TicketingScheduler,
     {
       provide: TicketingRepositorySymbol,
       useClass: TicketingRepositoryImplementation,
+    },
+    {
+      provide: UserRepositorySymbol,
+      useClass: UserRepositoryImplementation,
+    },
+    {
+      provide: ConcertDetailRepositorySymbol,
+      useClass: ConcertDetailRepositoryImpl,
+    },
+    {
+      provide: TicketingLogRepositorySymbol,
+      useClass: TicketingLogRepositoryImpl,
     },
   ],
   exports: [
@@ -26,6 +47,18 @@ import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/r
     {
       provide: TicketingRepositorySymbol,
       useClass: TicketingRepositoryImplementation,
+    },
+    {
+      provide: UserRepositorySymbol,
+      useClass: UserRepositoryImplementation,
+    },
+    {
+      provide: ConcertDetailRepositorySymbol,
+      useClass: ConcertDetailRepositoryImpl,
+    },
+    {
+      provide: TicketingLogRepositorySymbol,
+      useClass: TicketingLogRepositoryImpl,
     },
   ],
   controllers: [TicketingController],

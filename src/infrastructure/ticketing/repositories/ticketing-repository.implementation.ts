@@ -38,4 +38,7 @@ export class TicketingRepositoryImplementation implements TicketingRepository {
       await usedManager.save(ticket);
     }
   }
+  async findById(ticketingId: number): Promise<Ticketing | undefined> {
+    return await this.ticketing.findOne({ where: { id: ticketingId } });
+  }
 }

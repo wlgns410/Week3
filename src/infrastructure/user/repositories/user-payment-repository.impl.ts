@@ -12,8 +12,8 @@ import {
 } from '../../ticketing/entities/ticketing.entity';
 import { Repository } from 'typeorm';
 import { UserPaymentRepository } from '../../../domain/user/interfaces/user-payment-repository.interface';
-import { UserPaymentDto } from 'src/domain/user/entites/user-payment-request.entity';
-import { UserPaymentResponseDto } from 'src/domain/user/entites/user-payment-response.entity';
+import { UserPaymentDto } from 'src/presentation/user/dtos/user-payment-request.entity';
+import { UserPaymentResponseDto } from 'src/presentation/user/dtos/user-payment-response.entity';
 import { AppDataSource } from 'src/config/typeorm-config';
 
 @Injectable()

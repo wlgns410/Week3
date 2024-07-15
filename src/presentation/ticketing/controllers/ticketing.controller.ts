@@ -1,36 +1,28 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { ApiResponse } from '../../../common/api-response';
-import { TicketingResponse } from '../dtos/ticketing.response';
+import { Body, Controller, Post } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse as SwaggerApiResponse,
+} from '@nestjs/swagger';
+import { ReservationTicketUseCase } from '../../../application/ticketing/use-case/reservation-ticket.use-case';
+import { TicketResponseDto } from '../dtos/ticketing.response';
+import { TicketDto } from '../dtos/ticketing-dto.entity';
 
-class TicketingDto {
-  id: number;
-  userId: number;
-  concertDateId: number;
-  seatId: number;
-  price: number;
-  date: string;
-  seat: number;
-  concert: string;
-  reservation_start_at: string;
-  reservation_end_at: string;
-}
-
-@Controller('ticketing')
+@ApiTags('ticketings')
+@Controller('ticketings')
 export class TicketingController {
-  @Post(':ticketingId/reservation')
-  async reserveSeat(
-    @Body() ticketingDto: TicketingDto,
-  ): Promise<ApiResponse<TicketingResponse>> {
-    const ticketingData: TicketingResponse = {
-      id: 1,
-      price: 10000,
-      date: '2024-07-01T12:34:56Z',
-      seat: 1,
-      concert: '콘서트',
-      reservation_start_at: '2024-07-01T12:34:56Z',
-      reservation_end_at: '2024-07-01T12:34:56Z',
-    };
+  constructor(
+    private readonly reservationTicketUseCase: ReservationTicketUseCase,
+  ) {}
 
-    return new ApiResponse<TicketingResponse>(201, 'success', ticketingData);
+  @ApiOperation({ summary: 'Reserve a seat for a concert' })
+  @SwaggerApiResponse({
+    status: 201,
+    description: 'Seat reserved successfully',
+    type: TicketResponseDto,
+  })
+  @Post('reservation')
+  async reserveSeat(@Body() ticketDto: TicketDto): Promise<TicketResponseDto> {
+    return await this.reservationTicketUseCase.executeReservation(ticketDto);
   }
 }

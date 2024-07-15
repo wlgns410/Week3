@@ -1,4 +1,4 @@
-import { SeatStatus } from '../../../infrastructure/ticketing/entities/ticketing.entity';
+import { SeatStatus } from './ticketing.entity';
 
 export class TicketDto {
   concertId: number;

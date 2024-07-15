@@ -1,4 +1,8 @@
-import { SeatStatus } from '../../../infrastructure/ticketing/entities/ticketing.entity';
+export enum SeatStatus {
+  WAITING = 'WAITING',
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
+}
 
 export class TicketingResponseDto {
   id: number;
@@ -18,4 +22,14 @@ export class TicketingRequestDto {
   title: string;
   place: number;
   price: number;
+}
+
+export class TicketDto {
+  concertId: number;
+  userId: number;
+  concertDetailId: number;
+  title: string;
+  place: number;
+  price: number;
+  status: SeatStatus;
 }
