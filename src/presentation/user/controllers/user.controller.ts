@@ -1,11 +1,12 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { UserUseCase } from '../../../application/user/use-case/user.use-case';
-import { ApiResponse } from '../../../common/api-response';
 import { UserQueueDto } from '../../../presentation/user/dtos/user-queue-status-dto';
 import { UserBalanceChargeDto } from '../../../presentation/user/dtos/user-balance-dto';
 import { ApiTags, ApiOperation, ApiParam, ApiBody } from '@nestjs/swagger';
-import { UserPaymentDto } from '../dtos/user-payment-request.entity';
-import { UserPaymentResponseDto } from '../dtos/user-payment-response.entity';
+import {
+  UserPaymentDto,
+  UserPaymentResponseDto,
+} from '../dtos/user-payment-dto';
 
 class CreateUserDto {
   name: string;
@@ -18,25 +19,19 @@ class ChargeBalanceDto {
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userUseCase: UserUseCase) {}
+  constructor(private readonly userUseCase: UserUseCase) { }
 
   @ApiOperation({ summary: 'Create a new user' })
   @Post()
-  async createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<ApiResponse<null>> {
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
     await this.userUseCase.executeCreateUser(createUserDto.name);
-    return new ApiResponse<null>(201, 'success');
   }
 
   @ApiOperation({ summary: 'Get user balance' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @Get(':id/balance')
-  async getBalance(@Param('id') userId: string): Promise<ApiResponse<number>> {
-    const balance = await this.userUseCase.executeGetUserBalance(
-      Number(userId),
-    );
-    return new ApiResponse<number>(200, 'success', balance);
+  async getBalance(@Param('id') userId: string): Promise<number> {
+    return await this.userUseCase.executeGetUserBalance(Number(userId));
   }
 
   @ApiOperation({ summary: 'Charge user balance' })
@@ -46,23 +41,18 @@ export class UserController {
   async chargeBalance(
     @Param('id') userId: string,
     @Body() chargeBalanceDto: ChargeBalanceDto,
-  ): Promise<ApiResponse<null>> {
+  ): Promise<void> {
     const userBalanceDto = new UserBalanceChargeDto();
     userBalanceDto.userId = Number(userId);
     userBalanceDto.balance = chargeBalanceDto.amount;
-
     await this.userUseCase.executeChargeBalance(userBalanceDto);
-    return new ApiResponse<null>(204, 'Charge Success');
   }
 
   @ApiOperation({ summary: 'Issue a user queue token' })
   @ApiBody({ type: UserQueueDto })
   @Post('queue-token')
-  async issueUserQueue(
-    @Body() userQueueDto: UserQueueDto,
-  ): Promise<ApiResponse<null>> {
+  async issueUserQueue(@Body() userQueueDto: UserQueueDto): Promise<void> {
     await this.userUseCase.executeCreateQueue(userQueueDto);
-    return new ApiResponse<null>(201, 'success');
   }
 
   @ApiOperation({ summary: 'User payment' })
@@ -72,9 +62,8 @@ export class UserController {
   async userPayment(
     @Param('id') userId: string,
     @Body() userPaymentDto: UserPaymentDto,
-  ): Promise<ApiResponse<UserPaymentResponseDto>> {
+  ): Promise<UserPaymentResponseDto> {
     userPaymentDto.userId = Number(userId);
-    const result = await this.userUseCase.executePayment(userPaymentDto);
-    return new ApiResponse<UserPaymentResponseDto>(201, 'success', result);
+    return await this.userUseCase.executePayment(userPaymentDto);
   }
 }

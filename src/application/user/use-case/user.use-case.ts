@@ -2,17 +2,21 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { DataSource } from 'typeorm';
 import { UserBalanceChargeDto } from '../../../presentation/user/dtos/user-balance-dto';
-import { UserQueueDto } from '../../../presentation/user/dtos/user-queue-status-dto';
-import { UserQueueStatusDto } from '../../../presentation/user/dtos/user-queue-token.response';
-import { UserPaymentDto } from '../../../presentation/user/dtos/user-payment-request.entity';
-import { UserPaymentResponseDto } from '../../../presentation/user/dtos/user-payment-response.entity';
+import {
+  UserQueueDto,
+  UserQueueStatusDto,
+} from '../../../presentation/user/dtos/user-queue-status-dto';
+import {
+  UserPaymentDto,
+  UserPaymentResponseDto,
+} from '../../../presentation/user/dtos/user-payment-dto';
 
 @Injectable()
 export class UserUseCase {
   constructor(
     private readonly userService: UserService,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   async executeCreateUser(name: string): Promise<void> {
     await this.userService.createUser(name);

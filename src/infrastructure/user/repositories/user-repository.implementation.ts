@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, LessThan, Repository } from 'typeorm';
 import { QueueStatus, User } from '../entities/user.entity';
-import { UserQueueStatusDto } from '../../../domain/user/entites/user-queue.entity';
 import { UserRepository } from '../../../domain/user/interfaces/user-repository.interface';
 
 @Injectable()
@@ -10,7 +9,7 @@ export class UserRepositoryImplementation implements UserRepository {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   // 서비스 측에서 주입하는대로 다양한 역할을 하게 될거임
   async insert(userDto: Partial<User>, manager?: EntityManager): Promise<void> {

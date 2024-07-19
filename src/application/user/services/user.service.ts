@@ -18,15 +18,19 @@ import {
   UserBalanceChargeDto,
   UserBalanceLogDto,
 } from '../../../presentation/user/dtos/user-balance-dto';
-import { UserQueueDto } from '../../../presentation/user/dtos/user-queue-status-dto';
-import { UserQueueStatusDto } from '../../../presentation/user/dtos/user-queue-token.response';
+import {
+  UserQueueDto,
+  UserQueueStatusDto,
+} from '../../../presentation/user/dtos/user-queue-status-dto';
 import {
   TicketingRepository,
   TicketingRepositorySymbol,
 } from '../../../domain/ticketing/interfaces/ticketing-repository.interface';
-import { UserPaymentDto } from '../../../presentation/user/dtos/user-payment-request.entity';
-import { UserPaymentResponseDto } from '../../../presentation/user/dtos/user-payment-response.entity';
-import { SeatStatus } from '../../../presentation/ticketing/dtos/ticketing-dto.entity';
+import {
+  UserPaymentDto,
+  UserPaymentResponseDto,
+} from '../../../presentation/user/dtos/user-payment-dto';
+import { SeatStatus } from '../../../presentation/ticketing/dtos/ticketing-dto';
 
 @Injectable()
 export class UserService {
@@ -37,7 +41,7 @@ export class UserService {
     private readonly userLogRepository: UserLogRepository,
     @Inject(TicketingRepositorySymbol)
     private readonly ticketingRepository: TicketingRepository,
-  ) {}
+  ) { }
   async createUser(name: string): Promise<void> {
     const userDto = { name };
     await this.userRepository.insert(userDto);

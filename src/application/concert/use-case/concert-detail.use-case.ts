@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConcertService } from '../services/concert-date.service';
-import { DataSource } from 'typeorm';
-import { ConcertResponseDto } from '../../../presentation/concert/dtos/concert-date-response.entity';
-import { ConcertSeatResponseDto } from '../../../presentation/concert/dtos/concert-seat-response.entity';
+import { ConcertResponseDto } from '../../../presentation/concert/dtos/concert-date-dto';
+import { ConcertSeatResponseDto } from '../../../presentation/concert/dtos/concert-seat-dto';
 
 @Injectable()
 export class ConcertUseCase {
-  constructor(
-    private readonly concertService: ConcertService,
-    private readonly dataSource: DataSource,
-  ) {}
+  constructor(private readonly concertService: ConcertService) { }
 
   async executeGetConcertList(
     concertId: number,

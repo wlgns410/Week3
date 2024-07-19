@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -6,14 +6,13 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { ConcertUseCase } from '../../../application/concert/use-case/concert-detail.use-case';
-import { ConcertResponseDto } from '../dtos/concert-date-response.entity';
-import { ConcertSeatResponseDto } from '../dtos/concert-seat-response.entity';
-import { ApiResponse } from '../../../common/api-response';
+import { ConcertResponseDto } from '../dtos/concert-date-dto';
+import { ConcertSeatResponseDto } from '../dtos/concert-seat-dto';
 
 @ApiTags('concerts')
 @Controller('concerts')
 export class ConcertController {
-  constructor(private readonly concertUseCase: ConcertUseCase) {}
+  constructor(private readonly concertUseCase: ConcertUseCase) { }
 
   @ApiOperation({ summary: 'Get a list of concerts' })
   @ApiQuery({
@@ -36,10 +35,8 @@ export class ConcertController {
   @Get('list')
   async getConcertList(
     @Query('concertId') concertId: number,
-  ): Promise<ApiResponse<ConcertResponseDto[]>> {
-    const concertList =
-      await this.concertUseCase.executeGetConcertList(concertId);
-    return new ApiResponse<ConcertResponseDto[]>(200, 'success', concertList);
+  ): Promise<ConcertResponseDto[]> {
+    return await this.concertUseCase.executeGetConcertList(concertId);
   }
 
   @ApiOperation({ summary: 'Get a list of concert seats' })
@@ -70,11 +67,10 @@ export class ConcertController {
   async getConcertSeatList(
     @Query('concertDetailId') concertDetailId: number,
     @Query('date') date: Date,
-  ): Promise<ApiResponse<ConcertSeatResponseDto[]>> {
-    const seatList = await this.concertUseCase.executeGetConcertSeatList(
+  ): Promise<ConcertSeatResponseDto[]> {
+    return await this.concertUseCase.executeGetConcertSeatList(
       concertDetailId,
       date,
     );
-    return new ApiResponse<ConcertSeatResponseDto[]>(200, 'success', seatList);
   }
 }

@@ -1,10 +1,8 @@
-// import { QueueStatus } from '../../../infrastructure/user/entities/user.entity';
-
 export class UserQueueStatusDto {
-  queue_status: string;
-  currentOrder: number;
-  estimated_wait_time: Date;
-  expires_at: Date;
+  queue_status?: QueueStatus;
+  currentOrder?: number;
+  estimated_wait_time?: number | null;
+  expires_at?: Date | null;
 }
 
 export class UserQueueDto {

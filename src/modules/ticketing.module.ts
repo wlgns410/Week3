@@ -13,9 +13,9 @@ import { TicketingScheduler } from '../presentation/ticketing/schedulers/ticketi
 import { UserRepositorySymbol } from '../domain/user/interfaces/user-repository.interface';
 import { UserRepositoryImplementation } from '../infrastructure/user/repositories/user-repository.implementation';
 import { ConcertDetailRepositorySymbol } from '../domain/concert/interfaces/concert-detail-repository.interface';
-import { ConcertDetailRepositoryImpl } from '../infrastructure/concert/repositories/concert-repostiory.impl';
+import { ConcertDetailRepositoryImplementation } from '../infrastructure/concert/repositories/concert-repostiory.implementation';
 import { TicketingLogRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-log-repository.interface';
-import { TicketingLogRepositoryImpl } from '../infrastructure/ticketing/repositories/ticketing-log-repository.implementation';
+import { TicketingLogRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-log-repository.implementation';
 
 @Module({
   imports: [
@@ -35,11 +35,11 @@ import { TicketingLogRepositoryImpl } from '../infrastructure/ticketing/reposito
     },
     {
       provide: ConcertDetailRepositorySymbol,
-      useClass: ConcertDetailRepositoryImpl,
+      useClass: ConcertDetailRepositoryImplementation,
     },
     {
       provide: TicketingLogRepositorySymbol,
-      useClass: TicketingLogRepositoryImpl,
+      useClass: TicketingLogRepositoryImplementation,
     },
   ],
   exports: [
@@ -54,13 +54,13 @@ import { TicketingLogRepositoryImpl } from '../infrastructure/ticketing/reposito
     },
     {
       provide: ConcertDetailRepositorySymbol,
-      useClass: ConcertDetailRepositoryImpl,
+      useClass: ConcertDetailRepositoryImplementation,
     },
     {
       provide: TicketingLogRepositorySymbol,
-      useClass: TicketingLogRepositoryImpl,
+      useClass: TicketingLogRepositoryImplementation,
     },
   ],
   controllers: [TicketingController],
 })
-export class TicketingModule {}
+export class TicketingModule { }

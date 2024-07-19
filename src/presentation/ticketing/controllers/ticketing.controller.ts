@@ -5,15 +5,15 @@ import {
   ApiResponse as SwaggerApiResponse,
 } from '@nestjs/swagger';
 import { ReservationTicketUseCase } from '../../../application/ticketing/use-case/reservation-ticket.use-case';
-import { TicketResponseDto } from '../dtos/ticketing.response';
-import { TicketDto } from '../dtos/ticketing-dto.entity';
+import { TicketResponseDto } from '../dtos/ticketing-dto';
+import { TicketDto } from '../dtos/ticketing-dto';
 
 @ApiTags('ticketings')
 @Controller('ticketings')
 export class TicketingController {
   constructor(
     private readonly reservationTicketUseCase: ReservationTicketUseCase,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Reserve a seat for a concert' })
   @SwaggerApiResponse({

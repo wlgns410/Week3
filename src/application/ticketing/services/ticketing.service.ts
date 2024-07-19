@@ -10,20 +10,20 @@ import {
   TicketingRepositorySymbol,
 } from '../../../domain/ticketing/interfaces/ticketing-repository.interface';
 import { EntityManager } from 'typeorm';
-import { TicketResponseDto } from 'src/infrastructure/ticketing/entities/ticketing-response.entity';
-import { TicketDto } from 'src/infrastructure/ticketing/entities/ticketing-request.entity';
+import { TicketResponseDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
+import { TicketDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
 import {
   TicketingLogRepository,
   TicketingLogRepositorySymbol,
-} from 'src/domain/ticketing/interfaces/ticketing-log-repository.interface';
+} from '../../../domain/ticketing/interfaces/ticketing-log-repository.interface';
 import {
   UserRepository,
   UserRepositorySymbol,
-} from 'src/domain/user/interfaces/user-repository.interface';
+} from '../../../domain/user/interfaces/user-repository.interface';
 import {
   ConcertDetailRepository,
   ConcertDetailRepositorySymbol,
-} from 'src/domain/concert/interfaces/concert-detail-repository.interface';
+} from '../../../domain/concert/interfaces/concert-detail-repository.interface';
 
 @Injectable()
 export class TicketingService {
@@ -36,7 +36,7 @@ export class TicketingService {
     private readonly userRepository: UserRepository,
     @Inject(ConcertDetailRepositorySymbol)
     private readonly concertDetailRepository: ConcertDetailRepository,
-  ) {}
+  ) { }
 
   async reservationTicket(
     ticketDto: TicketDto,

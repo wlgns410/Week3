@@ -5,11 +5,12 @@ import { ConcertDetail } from '../entities/concert-detail.entity';
 import { ConcertDetailRepository } from '../../../domain/concert/interfaces/concert-detail-repository.interface';
 
 @Injectable()
-export class ConcertDetailRepositoryImpl implements ConcertDetailRepository {
+export class ConcertDetailRepositoryImplementation
+  implements ConcertDetailRepository {
   constructor(
     @InjectRepository(ConcertDetail)
     private readonly concertDetailRepository: Repository<ConcertDetail>,
-  ) {}
+  ) { }
 
   async getConcertList(concertId: number): Promise<Partial<ConcertDetail>[]> {
     return await this.concertDetailRepository.find({
@@ -23,7 +24,6 @@ export class ConcertDetailRepositoryImpl implements ConcertDetailRepository {
 
   async getConcertSeatList(
     concertDetailId: number,
-    date: Date,
   ): Promise<Partial<ConcertDetail>[]> {
     return await this.concertDetailRepository.find({
       select: ['available_seat', 'date'],

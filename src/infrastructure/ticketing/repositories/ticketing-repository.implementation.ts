@@ -9,7 +9,7 @@ export class TicketingRepositoryImplementation implements TicketingRepository {
   constructor(
     @InjectRepository(Ticketing)
     private readonly ticketing: Repository<Ticketing>,
-  ) {}
+  ) { }
   async insert(
     ticketing: Partial<Ticketing>,
     manager?: EntityManager,
@@ -19,10 +19,7 @@ export class TicketingRepositoryImplementation implements TicketingRepository {
     return await usedManager.save(newTicket);
   }
 
-  async findExpiredTickets(
-    now: Date,
-    manager?: EntityManager,
-  ): Promise<Ticketing[]> {
+  async findExpiredTickets(now: Date): Promise<Ticketing[]> {
     return this.ticketing.find({
       where: { status: SeatStatus.WAITING, expired_at: LessThan(now) },
     });
