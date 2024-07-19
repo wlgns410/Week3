@@ -32,6 +32,7 @@ import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/r
   ],
   exports: [
     UserService,
+    UserUseCase,
     {
       provide: UserRepositorySymbol,
       useClass: UserRepositoryImplementation,

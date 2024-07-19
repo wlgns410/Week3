@@ -1,6 +1,5 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { DataSource } from 'typeorm';
 import { UserBalanceChargeDto } from '../../../presentation/user/dtos/user-balance-dto';
 import {
   UserQueueDto,
@@ -10,15 +9,14 @@ import {
   UserPaymentDto,
   UserPaymentResponseDto,
 } from '../../../presentation/user/dtos/user-payment-dto';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class UserUseCase {
-  constructor(
-    private readonly userService: UserService,
-    private readonly dataSource: DataSource,
-  ) { }
+  constructor(private readonly userService: UserService) {}
 
   async executeCreateUser(name: string): Promise<void> {
+    console.log('here2');
     await this.userService.createUser(name);
   }
 
@@ -26,20 +24,9 @@ export class UserUseCase {
     return await this.userService.getUserBalance(userId);
   }
 
+  @Transactional()
   async executeCheckUser(now: Date): Promise<void> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      await this.userService.checkUser(now);
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+    await this.userService.checkUser(now);
   }
 
   async executeGetQueueStatus(
@@ -48,56 +35,22 @@ export class UserUseCase {
     return await this.userService.getQueueStatus(userId);
   }
 
+  @Transactional()
   async executeChargeBalance(
     userBalanceDto: UserBalanceChargeDto,
   ): Promise<void> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      await this.userService.chargeBalance(userBalanceDto);
-      await queryRunner.commitTransaction();
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException('Failed to charge balance');
-    } finally {
-      await queryRunner.release();
-    }
+    await this.userService.chargeBalance(userBalanceDto);
   }
 
+  @Transactional()
   async executeCreateQueue(userQueueDto: UserQueueDto): Promise<void> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      await this.userService.createQueue(userQueueDto);
-      await queryRunner.commitTransaction();
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+    await this.userService.createQueue(userQueueDto);
   }
 
+  @Transactional()
   async executePayment(
     userPaymentDto: UserPaymentDto,
   ): Promise<UserPaymentResponseDto> {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    try {
-      const result = await this.userService.paymentUser(userPaymentDto);
-      await queryRunner.commitTransaction();
-      return result;
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      throw err;
-    } finally {
-      await queryRunner.release();
-    }
+    return await this.userService.paymentUser(userPaymentDto);
   }
 }

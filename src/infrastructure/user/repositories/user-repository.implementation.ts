@@ -9,20 +9,15 @@ export class UserRepositoryImplementation implements UserRepository {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   // 서비스 측에서 주입하는대로 다양한 역할을 하게 될거임
-  async insert(userDto: Partial<User>, manager?: EntityManager): Promise<void> {
-    const usedManager = manager ?? this.userRepository.manager;
-    await usedManager.save(userDto);
+  async insert(userDto: Partial<User>): Promise<void> {
+    await this.userRepository.save(userDto);
   }
 
-  async findUserById(
-    userId: number,
-    manager?: EntityManager,
-  ): Promise<User | undefined> {
-    const usedManager = manager ?? this.userRepository.manager;
-    const user = await usedManager.findOne(User, { where: { id: userId } });
+  async findUserById(userId: number): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
       throw new Error('User not found');
@@ -44,9 +39,8 @@ export class UserRepositoryImplementation implements UserRepository {
     return user.balance;
   }
 
-  async findExpiredUsers(now: Date, manager?: EntityManager): Promise<User[]> {
-    const usedManager = manager ?? this.userRepository.manager;
-    return await usedManager.find(User, {
+  async findExpiredUsers(now: Date): Promise<User[]> {
+    return await this.userRepository.find({
       where: { queue_status: QueueStatus.ACTIVE, expires_at: LessThan(now) },
     });
   }

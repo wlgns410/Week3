@@ -36,16 +36,10 @@ export class TicketingService {
     private readonly userRepository: UserRepository,
     @Inject(ConcertDetailRepositorySymbol)
     private readonly concertDetailRepository: ConcertDetailRepository,
-  ) { }
+  ) {}
 
-  async reservationTicket(
-    ticketDto: TicketDto,
-    manager: EntityManager,
-  ): Promise<TicketResponseDto> {
-    const user = await this.userRepository.findUserById(
-      ticketDto.userId,
-      manager,
-    );
+  async reservationTicket(ticketDto: TicketDto): Promise<TicketResponseDto> {
+    const user = await this.userRepository.findUserById(ticketDto.userId);
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -86,25 +80,24 @@ export class TicketingService {
     const updatedAvailableSeat = concertDetail.available_seat - 1;
 
     // 예약 정보 생성
-    const ticketing = await this.ticketingRepository.insert(
-      {
-        user_id: ticketDto.userId,
-        concert_detail_id: ticketDto.concertDetailId,
-        title: concertDetail.title,
-        place: updatedAvailableSeat, // 남은 좌석 수를 문자열로 변환하여 할당
-        price: concertDetail.price,
-        status: ticketDto.status,
-        expired_at: new Date(now.getTime() + 5 * 60 * 1000), // 만료 시간 설정 (예: 5분 후)
-      },
-      manager,
-    );
+    const ticketing = await this.ticketingRepository.insert({
+      user_id: ticketDto.userId,
+      concert_detail_id: ticketDto.concertDetailId,
+      title: concertDetail.title,
+      place: updatedAvailableSeat, // 남은 좌석 수를 문자열로 변환하여 할당
+      price: concertDetail.price,
+      status: ticketDto.status,
+      expired_at: new Date(now.getTime() + 5 * 60 * 1000), // 만료 시간 설정 (예: 5분 후)
+    });
 
     // 예약 로그 생성
-    await this.ticketingLogRepository.insert(ticketing.id, manager);
+    await this.ticketingLogRepository.insert(ticketing.id);
 
     // 남은 좌석 차감
-    concertDetail.available_seat = updatedAvailableSeat;
-    await manager.save(concertDetail);
+    await this.concertDetailRepository.updateAvailableSeats(
+      concertDetail.id,
+      updatedAvailableSeat,
+    );
 
     // 응답 DTO 생성
     const ticketResponse: TicketResponseDto = {
@@ -119,24 +112,18 @@ export class TicketingService {
     return ticketResponse;
   }
 
-  async changeStatus(now: Date, manager?: EntityManager): Promise<void> {
-    const expiredTickets = await this.ticketingRepository.findExpiredTickets(
-      now,
-      manager,
-    );
+  async changeStatus(now: Date): Promise<void> {
+    const expiredTickets =
+      await this.ticketingRepository.findExpiredTickets(now);
 
     // 만료된 티켓이 없는 경우
     if (!expiredTickets || expiredTickets.length === 0) {
-      // 만료된 티켓이 없는 경우에는 상태 변경해줄 것이 없다는 뜻이니 에러 상태가 아님.
-      return;
+      return; // 만료된 티켓이 없는 경우에는 상태 변경해줄 것이 없다는 뜻이니 에러 상태가 아님.
     }
 
-    // 만료된 티켓이 있는 경우인데, 상태 변경을 못시킨거는 에러임
+    // 만료된 티켓이 있는 경우
     try {
-      await this.ticketingRepository.changeExpiredTicketsStatus(
-        expiredTickets,
-        manager,
-      );
+      await this.ticketingRepository.changeExpiredTicketsStatus(expiredTickets);
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to change status of expired tickets',

@@ -41,9 +41,10 @@ export class UserService {
     private readonly userLogRepository: UserLogRepository,
     @Inject(TicketingRepositorySymbol)
     private readonly ticketingRepository: TicketingRepository,
-  ) { }
+  ) {}
   async createUser(name: string): Promise<void> {
     const userDto = { name };
+    console.log('here3');
     await this.userRepository.insert(userDto);
   }
 

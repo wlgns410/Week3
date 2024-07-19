@@ -13,4 +13,8 @@ export interface ConcertDetailRepository {
   findConcertDetailById(
     concertDetailId: number,
   ): Promise<ConcertDetail | undefined>;
+  updateAvailableSeats(
+    concertDetailId: number,
+    availableSeat: number,
+  ): Promise<void>;
 }

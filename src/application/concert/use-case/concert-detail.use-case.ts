@@ -5,7 +5,7 @@ import { ConcertSeatResponseDto } from '../../../presentation/concert/dtos/conce
 
 @Injectable()
 export class ConcertUseCase {
-  constructor(private readonly concertService: ConcertService) { }
+  constructor(private readonly concertService: ConcertService) {}
 
   async executeGetConcertList(
     concertId: number,

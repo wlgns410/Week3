@@ -19,11 +19,12 @@ class ChargeBalanceDto {
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userUseCase: UserUseCase) { }
+  constructor(private readonly userUseCase: UserUseCase) {}
 
   @ApiOperation({ summary: 'Create a new user' })
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
+    console.log('here1');
     await this.userUseCase.executeCreateUser(createUserDto.name);
   }
 

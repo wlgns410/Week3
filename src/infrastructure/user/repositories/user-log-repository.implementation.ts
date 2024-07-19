@@ -11,24 +11,15 @@ export class UserLogRepositoryImplementation implements UserLogRepository {
     private readonly userLogRepository: Repository<UserBalanceLog>,
   ) {}
 
-  async insert(
-    useLogDto: Partial<UserBalanceLog>,
-    manager?: EntityManager,
-  ): Promise<void> {
-    const usedManager = manager ?? this.userLogRepository.manager;
-    await usedManager.save(useLogDto.user_id);
+  async insert(useLogDto: Partial<UserBalanceLog>): Promise<void> {
+    await this.userLogRepository.save(useLogDto);
   }
 
-  async getById(
-    id: number,
-    manager?: EntityManager,
-  ): Promise<UserBalanceLog | undefined> {
-    const usedManager = manager ?? this.userLogRepository.manager;
-    return await usedManager.findOne(UserBalanceLog, { where: { id } });
+  async getById(id: number): Promise<UserBalanceLog | undefined> {
+    return await this.userLogRepository.findOne({ where: { id } });
   }
 
-  async findAll(manager?: EntityManager): Promise<UserBalanceLog[]> {
-    const usedManager = manager ?? this.userLogRepository.manager;
-    return await usedManager.find(UserBalanceLog);
+  async findAll(): Promise<UserBalanceLog[]> {
+    return await this.userLogRepository.find();
   }
 }

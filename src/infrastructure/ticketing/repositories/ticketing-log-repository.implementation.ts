@@ -6,22 +6,18 @@ import { TicketLog } from '../entities/ticket-log.entity';
 
 @Injectable()
 export class TicketingLogRepositoryImplementation
-  implements TicketingLogRepository {
+  implements TicketingLogRepository
+{
   constructor(
     @InjectRepository(TicketLog)
     private readonly ticketLogRepository: Repository<TicketLog>,
-  ) { }
+  ) {}
 
-  async insert(
-    ticketing_id: number,
-    _manager?: EntityManager,
-  ): Promise<TicketLog> {
-    const manager = _manager ?? this.ticketLogRepository.manager;
-
+  async insert(ticketing_id: number): Promise<TicketLog> {
     // 새로운 TicketLog 엔티티 생성
     const newLog = this.ticketLogRepository.create({ ticketing_id });
 
     // 엔티티 저장
-    return await manager.save(newLog);
+    return await this.ticketLogRepository.save(newLog);
   }
 }
