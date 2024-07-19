@@ -7,6 +7,7 @@ import { DatabaseModule } from './libs/datasource/module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './config/typeorm-config';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { typeormConfig } from './config/typeorm-config';
     TicketingModule,
     UserModule,
     DatabaseModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
