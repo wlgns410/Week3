@@ -10,6 +10,8 @@ import { UserRepositorySymbol } from '../domain/user/interfaces/user-repository.
 import { UserLogRepositorySymbol } from '../domain/user/interfaces/user-log-repository.interface';
 import { UserRepositoryImplementation } from '../infrastructure/user/repositories/user-repository.implementation';
 import { UserLogRepositoryImplementation } from '../infrastructure/user/repositories/user-log-repository.implementation';
+import { TicketingRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-repository.interface';
+import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-repository.implementation';
 @Module({
   imports: [TypeOrmModule.forFeature([User, UserBalanceLog, Ticketing])],
   providers: [
@@ -22,6 +24,25 @@ import { UserLogRepositoryImplementation } from '../infrastructure/user/reposito
     {
       provide: UserLogRepositorySymbol,
       useClass: UserLogRepositoryImplementation,
+    },
+    {
+      provide: TicketingRepositorySymbol,
+      useClass: TicketingRepositoryImplementation,
+    },
+  ],
+  exports: [
+    UserService,
+    {
+      provide: UserRepositorySymbol,
+      useClass: UserRepositoryImplementation,
+    },
+    {
+      provide: UserLogRepositorySymbol,
+      useClass: UserLogRepositoryImplementation,
+    },
+    {
+      provide: TicketingRepositorySymbol,
+      useClass: TicketingRepositoryImplementation,
     },
   ],
   controllers: [UserController],
