@@ -7,6 +7,7 @@ import {
   UserPaymentDto,
   UserPaymentResponseDto,
 } from '../dtos/user-payment-dto';
+import { ApiResponse } from '../../../common/api-response';
 
 class CreateUserDto {
   name: string;
@@ -31,8 +32,11 @@ export class UserController {
   @ApiOperation({ summary: 'Get user balance' })
   @ApiParam({ name: 'id', description: 'User ID' })
   @Get(':id/balance')
-  async getBalance(@Param('id') userId: string): Promise<number> {
-    return await this.userUseCase.executeGetUserBalance(Number(userId));
+  async getBalance(@Param('id') userId: string): Promise<ApiResponse<number>> {
+    const balance = await this.userUseCase.executeGetUserBalance(
+      Number(userId),
+    );
+    return new ApiResponse<number>(200, 'success', balance);
   }
 
   @ApiOperation({ summary: 'Charge user balance' })

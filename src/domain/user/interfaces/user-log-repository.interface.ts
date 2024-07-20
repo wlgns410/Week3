@@ -1,4 +1,3 @@
-import { EntityManager } from 'typeorm';
 import { UserBalanceLog } from '../../../infrastructure/user/entities/user-balance-log.entity';
 
 export const UserLogRepositorySymbol = Symbol.for('UserLogRepository');

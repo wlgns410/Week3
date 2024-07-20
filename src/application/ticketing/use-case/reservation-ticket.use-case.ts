@@ -1,20 +1,48 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { TicketingService } from '../services/ticketing.service';
 import { TicketResponseDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
 import { TicketDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
 import { Transactional } from 'typeorm-transactional';
+import { AppDataSource } from '../../../config/typeorm-config';
 
 @Injectable()
 export class ReservationTicketUseCase {
   constructor(@Inject() private readonly ticketingService: TicketingService) {}
 
-  @Transactional()
   async changeStatusExcute(now: Date): Promise<void> {
-    await this.ticketingService.changeStatus(now);
+    const queryRunner = AppDataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await this.ticketingService.changeStatus(now);
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException('Failed to change status');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
-  @Transactional()
   async executeReservation(ticketDto: TicketDto): Promise<TicketResponseDto> {
-    return await this.ticketingService.reservationTicket(ticketDto);
+    const queryRunner = AppDataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const result = await this.ticketingService.reservationTicket(ticketDto);
+      await queryRunner.commitTransaction();
+      return result;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException('Failed to reserve ticket');
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

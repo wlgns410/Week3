@@ -44,7 +44,6 @@ export class UserService {
   ) {}
   async createUser(name: string): Promise<void> {
     const userDto = { name };
-    console.log('here3');
     await this.userRepository.insert(userDto);
   }
 

@@ -14,11 +14,11 @@ export class UserBalanceLog {
   id: number;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @Column()
-  user_id: number;
+  userId: number;
 
   @Column()
   amount: number;
