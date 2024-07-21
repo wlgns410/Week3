@@ -31,6 +31,9 @@ import {
   UserPaymentResponseDto,
 } from '../../../presentation/user/dtos/user-payment-dto';
 import { SeatStatus } from '../../../presentation/ticketing/dtos/ticketing-dto';
+import { EntityManager } from 'typeorm';
+import { User } from '../../../infrastructure/user/entities/user.entity';
+import { UserBalanceLog } from '../../../infrastructure/user/entities/user-balance-log.entity';
 
 @Injectable()
 export class UserService {
@@ -71,20 +74,46 @@ export class UserService {
     return await this.userRepository.getQueueStatus(userId);
   }
 
-  async chargeBalance(userBalanceDto: UserBalanceChargeDto): Promise<void> {
-    const user = await this.userRepository.findUserById(userBalanceDto.userId);
+  // async chargeBalance(userBalanceDto: UserBalanceChargeDto): Promise<void> {
+  //   const user = await this.userRepository.findUserById(userBalanceDto.userId);
 
+  //   user.balance += userBalanceDto.balance;
+  //   await this.userRepository.insert(user);
+
+  //   // 수정필요
+  //   const newUserLog: UserBalanceLogDto = {
+  //     userId: userBalanceDto.userId,
+  //     amount: userBalanceDto.balance,
+  //     transactionType: TransactionType.CHARGE,
+  //   };
+
+  //   await this.userLogRepository.insert(newUserLog);
+  // }
+
+  async chargeBalance(
+    userBalanceDto: UserBalanceChargeDto,
+    manager: EntityManager,
+  ): Promise<void> {
+    // 비관적 락을 사용하여 사용자 조회
+    const user = await manager.findOne(User, {
+      where: { id: userBalanceDto.userId },
+      lock: { mode: 'pessimistic_write' },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // 잔액 충전
     user.balance += userBalanceDto.balance;
-    await this.userRepository.insert(user);
+    await manager.save(user);
 
-    // 수정필요
-    const newUserLog: UserBalanceLogDto = {
-      userId: userBalanceDto.userId,
-      amount: userBalanceDto.balance,
-      transactionType: TransactionType.CHARGE,
-    };
-
-    await this.userLogRepository.insert(newUserLog);
+    // 로그 기록
+    const newUserLog: UserBalanceLog = new UserBalanceLog();
+    newUserLog.userId = userBalanceDto.userId;
+    newUserLog.amount = userBalanceDto.balance;
+    newUserLog.transactionType = TransactionType.CHARGE;
+    await manager.save(newUserLog);
   }
 
   async createQueue(userQueueDto: UserQueueDto): Promise<void> {

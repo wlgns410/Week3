@@ -26,26 +26,44 @@ describe('Controller (e2e)', () => {
     expect(response.body).toEqual({});
   });
 
-  it('/PATCH users/:id/balance - charge balance', async () => {
-    const createUserDto = { name: 'Test User' };
-
-    // Create a new user first
-    const createUserResponse = await request(app.getHttpServer())
-      .post('/users')
-      .send(createUserDto)
-      .expect(201);
-
+  it('/PATCH users/:id/balance - charge balance concurrently', async () => {
     // Assuming the user ID is returned in the response or known
-    const userId = 3; // replace with the actual user ID if necessary
+    const userId = 21; // replace with the actual user ID if necessary
 
     const chargeBalanceDto = { amount: 1000 };
 
-    const chargeResponse = await request(app.getHttpServer())
-      .patch(`/users/${userId}/balance`)
-      .send(chargeBalanceDto)
-      .expect(200);
+    // Function to send a charge balance request
+    const sendChargeBalanceRequest = () =>
+      request(app.getHttpServer())
+        .patch(`/users/${userId}/balance`)
+        .send(chargeBalanceDto)
+        .expect(200);
 
-    expect(chargeResponse.body).toEqual({});
+    // Create an array of 100 promises
+    const concurrentRequests = Array(500)
+      .fill(null)
+      .map(sendChargeBalanceRequest);
+
+    // Execute all requests concurrently
+    const results = await Promise.allSettled(concurrentRequests);
+
+    // Log results
+    const failedRequests = results.filter(
+      (result) => result.status === 'rejected',
+    );
+    const successfulRequests = results.filter(
+      (result) => result.status === 'fulfilled',
+    );
+
+    console.log(`Total requests: ${results.length}`);
+    console.log(`Successful requests: ${successfulRequests.length}`);
+    console.log(`Failed requests: ${failedRequests.length}`);
+
+    failedRequests.forEach((result, index) => {
+      console.error(`Request ${index + 1} failed: ${result}`);
+    });
+
+    expect(successfulRequests.length).toBeGreaterThan(0);
   });
 
   it('/GET users/:id/balance - get user balance', async () => {

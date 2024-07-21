@@ -8,6 +8,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './config/typeorm-config';
 import { CommonModule } from './common/common.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CommonModule } from './common/common.module';
     UserModule,
     DatabaseModule,
     CommonModule,
+    RedisModule,
   ],
   controllers: [],
   providers: [],
