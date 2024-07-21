@@ -2,6 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
 import { config } from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
+
 config();
 
 export const typeormConfig: TypeOrmModuleOptions = {
@@ -20,3 +21,12 @@ export const dataSourceOptions: DataSourceOptions =
   typeormConfig as DataSourceOptions;
 
 export const AppDataSource = new DataSource(dataSourceOptions);
+
+// 데이터베이스 초기화
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Data Source has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during Data Source initialization:', err);
+  });

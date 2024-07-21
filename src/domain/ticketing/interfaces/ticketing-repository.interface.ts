@@ -1,26 +1,13 @@
 import { EntityManager } from 'typeorm';
-import { TicketDto } from '../entities/ticketing-request.entity';
-import { TicketResponseDto } from '../entities/ticketing-response.entity';
-import {
-  TicketingResponseDto,
-  TicketingRequestDto,
-} from '../entities/ticketing-dto.entity';
+import { Ticketing } from '../../../infrastructure/ticketing/entities/ticketing.entity';
 
 export const TicketingRepositorySymbol = Symbol.for('TicketingRepository');
 
 export interface TicketingRepository {
-  // reservationTicket(ticketDto: TicketDto): Promise<TicketResponseDto>;
-
-  insert(
-    ticketing: TicketingRequestDto,
-    manager?: EntityManager,
-  ): Promise<TicketingResponseDto>;
-  findExpiredTickets(
-    now: Date,
-    manager?: EntityManager,
-  ): Promise<TicketingResponseDto[]>;
+  insert(ticketing: Partial<Ticketing>): Promise<Partial<Ticketing>>;
+  findExpiredTickets(now: Date): Promise<Partial<Ticketing>[]>;
   changeExpiredTicketsStatus(
-    expiredTickets: TicketingResponseDto[],
-    manager?: EntityManager,
+    expiredTickets: Partial<Ticketing>[],
   ): Promise<void>;
+  findById(ticketingId: number): Promise<Ticketing | undefined>;
 }

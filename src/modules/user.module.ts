@@ -1,40 +1,49 @@
 import { Module } from '@nestjs/common';
 import { UserController } from '../presentation/user/controllers/user.controller';
-import { UserCreateService } from '../application/user/services/user-create.service';
-import { UserCreateRepositoryImpl } from '../infrastructure/user/repositories/user-create-repository.impl';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../infrastructure/user/entities/user.entity';
 import { UserBalanceLog } from '../infrastructure/user/entities/user-balance-log.entity';
-import { UserBalanceRepositoryImpl } from '../infrastructure/user/repositories/user-balance-repository.impl';
-import { UserBalanceService } from '../application//user/services/user-balance.service';
-import { UserQueueOrderService } from '../application/user/services/user-queue.service';
-import { UserQueueOrderRepositoryImpl } from '../infrastructure/user/repositories/user-queueing-token-repository.impl';
-import { UserPaymentService } from '../application/user/services/user-payment.service';
-import { UserPaymentRepositoryImpl } from '../infrastructure/user/repositories/user-payment-repository.impl';
 import { Ticketing } from '../infrastructure/ticketing/entities/ticketing.entity';
-
+import { UserService } from '../application/user/services/user.service';
+import { UserUseCase } from '../application/user/use-case/user.use-case';
+import { UserRepositorySymbol } from '../domain/user/interfaces/user-repository.interface';
+import { UserLogRepositorySymbol } from '../domain/user/interfaces/user-log-repository.interface';
+import { UserRepositoryImplementation } from '../infrastructure/user/repositories/user-repository.implementation';
+import { UserLogRepositoryImplementation } from '../infrastructure/user/repositories/user-log-repository.implementation';
+import { TicketingRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-repository.interface';
+import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-repository.implementation';
 @Module({
   imports: [TypeOrmModule.forFeature([User, UserBalanceLog, Ticketing])],
   providers: [
-    UserCreateService,
+    UserUseCase,
+    UserService,
     {
-      provide: 'UserCreateRepository',
-      useClass: UserCreateRepositoryImpl,
+      provide: UserRepositorySymbol,
+      useClass: UserRepositoryImplementation,
     },
-    UserBalanceService,
     {
-      provide: 'UserBalanceRepository',
-      useClass: UserBalanceRepositoryImpl,
+      provide: UserLogRepositorySymbol,
+      useClass: UserLogRepositoryImplementation,
     },
-    UserQueueOrderService,
     {
-      provide: 'UserQueueOrderRepository',
-      useClass: UserQueueOrderRepositoryImpl,
+      provide: TicketingRepositorySymbol,
+      useClass: TicketingRepositoryImplementation,
     },
-    UserPaymentService,
+  ],
+  exports: [
+    UserService,
+    UserUseCase,
     {
-      provide: 'UserPaymentRepository',
-      useClass: UserPaymentRepositoryImpl,
+      provide: UserRepositorySymbol,
+      useClass: UserRepositoryImplementation,
+    },
+    {
+      provide: UserLogRepositorySymbol,
+      useClass: UserLogRepositoryImplementation,
+    },
+    {
+      provide: TicketingRepositorySymbol,
+      useClass: TicketingRepositoryImplementation,
     },
   ],
   controllers: [UserController],

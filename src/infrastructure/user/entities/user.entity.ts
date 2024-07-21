@@ -15,7 +15,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, nullable: true })
   balance: number;
 
   @Column({ length: 50 })

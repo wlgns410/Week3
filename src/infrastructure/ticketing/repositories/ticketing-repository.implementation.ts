@@ -10,32 +10,26 @@ export class TicketingRepositoryImplementation implements TicketingRepository {
     @InjectRepository(Ticketing)
     private readonly ticketing: Repository<Ticketing>,
   ) {}
-  async insert(
-    ticketing: Partial<Ticketing>,
-    manager?: EntityManager,
-  ): Promise<Ticketing> {
-    const usedManager = manager ?? this.ticketing.manager;
+
+  async insert(ticketing: Partial<Ticketing>): Promise<Ticketing> {
     const newTicket = this.ticketing.create(ticketing);
-    return await usedManager.save(newTicket);
+    return await this.ticketing.save(newTicket);
   }
 
-  async findExpiredTickets(
-    now: Date,
-    manager?: EntityManager,
-  ): Promise<Ticketing[]> {
+  async findExpiredTickets(now: Date): Promise<Ticketing[]> {
     return this.ticketing.find({
       where: { status: SeatStatus.WAITING, expired_at: LessThan(now) },
     });
   }
 
-  async changeExpiredTicketsStatus(
-    expiredTickets: Ticketing[],
-    manager?: EntityManager,
-  ): Promise<void> {
-    const usedManager = manager ?? this.ticketing.manager;
+  async changeExpiredTicketsStatus(expiredTickets: Ticketing[]): Promise<void> {
     for (const ticket of expiredTickets) {
       ticket.status = SeatStatus.CANCELLED;
-      await usedManager.save(ticket);
+      await this.ticketing.save(ticket);
     }
+  }
+
+  async findById(ticketingId: number): Promise<Ticketing | undefined> {
+    return await this.ticketing.findOne({ where: { id: ticketingId } });
   }
 }
