@@ -12,8 +12,13 @@ import { UserRepositoryImplementation } from '../infrastructure/user/repositorie
 import { UserLogRepositoryImplementation } from '../infrastructure/user/repositories/user-log-repository.implementation';
 import { TicketingRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-repository.interface';
 import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-repository.implementation';
+import { RedisModule } from '../redis/redis.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserBalanceLog, Ticketing])],
+  imports: [
+    TypeOrmModule.forFeature([User, UserBalanceLog, Ticketing]),
+    RedisModule,
+  ],
   providers: [
     UserUseCase,
     UserService,
