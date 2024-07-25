@@ -16,6 +16,29 @@ export class UserRepositoryImplementation implements UserRepository {
     await this.userRepository.save(userDto);
   }
 
+  async updateUser(
+    manager: EntityManager,
+    userDto: Partial<User>,
+  ): Promise<void> {
+    await manager.save(User, userDto);
+  }
+
+  async findUserByIdWithLock(
+    manager: EntityManager,
+    userId: number,
+  ): Promise<User | undefined> {
+    const user = await manager.findOne(User, {
+      where: { id: userId },
+      lock: { mode: 'pessimistic_write' },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
+  }
+
   async findUserById(userId: number): Promise<User | undefined> {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
@@ -41,19 +64,14 @@ export class UserRepositoryImplementation implements UserRepository {
 
   async findExpiredUsers(now: Date): Promise<User[]> {
     return await this.userRepository.find({
-      where: { queue_status: QueueStatus.ACTIVE, expires_at: LessThan(now) },
+      where: { queueStatus: QueueStatus.ACTIVE, expiredAt: LessThan(now) },
     });
   }
 
   async getQueueStatus(userId: number): Promise<Partial<User> | undefined> {
     const user = this.userRepository.findOne({
       where: { id: userId },
-      select: [
-        'queue_status',
-        'currentOrder',
-        'estimated_wait_time',
-        'expires_at',
-      ],
+      select: ['queueStatus', 'currentOrder', 'estimateWaitTime', 'expiredAt'],
     });
     if (!user) {
       throw new NotFoundException('User not found in queue');
@@ -64,7 +82,7 @@ export class UserRepositoryImplementation implements UserRepository {
 
   async getNextOrder(): Promise<number> {
     const activeUsersCount = await this.userRepository.count({
-      where: { queue_status: QueueStatus.ACTIVE },
+      where: { queueStatus: QueueStatus.ACTIVE },
     });
 
     return activeUsersCount + 1;

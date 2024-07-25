@@ -17,5 +17,5 @@ export class Concert {
   description: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }

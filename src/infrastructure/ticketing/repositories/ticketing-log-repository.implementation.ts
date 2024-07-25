@@ -13,11 +13,20 @@ export class TicketingLogRepositoryImplementation
     private readonly ticketLogRepository: Repository<TicketLog>,
   ) {}
 
-  async insert(ticketing_id: number): Promise<TicketLog> {
-    // 새로운 TicketLog 엔티티 생성
-    const newLog = this.ticketLogRepository.create({ ticketing_id });
+  async insert(
+    manager: EntityManager,
+    ticketingId: number,
+  ): Promise<TicketLog> {
+    try {
+      // 새로운 TicketLog 엔티티 생성
+      const newLog = manager.create(TicketLog, { ticketingId });
 
-    // 엔티티 저장
-    return await this.ticketLogRepository.save(newLog);
+      // 엔티티 저장
+      const result = await manager.save(TicketLog, newLog);
+      return result;
+    } catch (error) {
+      console.error('Error saving ticket log:', error);
+      throw new Error('Failed to save ticket log');
+    }
   }
 }

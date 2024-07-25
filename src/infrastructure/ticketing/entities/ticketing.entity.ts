@@ -22,27 +22,27 @@ export class Ticketing {
   id: number;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @Column()
-  user_id: number;
+  userId: number;
 
   @ManyToOne(() => ConcertDetail)
-  @JoinColumn({ name: 'concert_detail_id' })
+  @JoinColumn({ name: 'concertDetailId' })
   concertDetail: ConcertDetail;
 
   @Column()
-  concert_detail_id: number;
+  concertDetailId: number;
 
-  @Column({ length: 20 })
+  @Column({ type: 'varchar', length: 20 })
   title: string;
 
   @Column()
   place: number;
 
   @Column()
-  price: number;
+  price: number; // avaliableSeat
 
   @Column({
     type: 'enum',
@@ -52,15 +52,15 @@ export class Ticketing {
   status: SeatStatus;
 
   @CreateDateColumn()
-  created_at: Date; // 결제 가능 시간 시작으로도 사용 가능
+  createdAt: Date; // 결제 가능 시간 시작으로도 사용 가능
 
   @Column()
-  expired_at: Date; // 결제 가능 시간 끝
+  expiredAt: Date; // 결제 가능 시간 끝
 
-  @BeforeInsert()
-  setExpirationDate() {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() + 5);
-    this.expired_at = now;
-  }
+  // @BeforeInsert()
+  // setExpirationDate() {
+  //   const now = new Date();
+  //   now.setMinutes(now.getMinutes() + 5);
+  //   this.expiredAt = now;
+  // }
 }

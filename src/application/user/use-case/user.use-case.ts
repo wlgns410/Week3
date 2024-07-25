@@ -84,7 +84,7 @@ export class UserUseCase {
     await queryRunner.startTransaction();
 
     try {
-      await this.userService.createQueue(userQueueDto);
+      await this.userService.createQueue(queryRunner.manager, userQueueDto);
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -102,7 +102,10 @@ export class UserUseCase {
     await queryRunner.startTransaction();
 
     try {
-      const result = await this.userService.paymentUser(userPaymentDto);
+      const result = await this.userService.paymentUser(
+        queryRunner.manager,
+        userPaymentDto,
+      );
       await queryRunner.commitTransaction();
       return result;
     } catch (error) {

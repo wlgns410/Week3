@@ -15,12 +15,12 @@ export class TicketLog {
   id: number;
 
   @ManyToOne(() => Ticketing)
-  @JoinColumn({ name: 'ticketing_id' })
+  @JoinColumn({ name: 'ticketingId' })
   ticketing: Ticketing;
 
   @Column()
-  ticketing_id: number;
+  ticketingId: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }

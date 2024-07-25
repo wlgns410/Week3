@@ -8,7 +8,7 @@ export class TicketingScheduler {
     private readonly reservationTicketUseCase: ReservationTicketUseCase,
   ) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  // @Cron(CronExpression.EVERY_MINUTE)
   async handleCron() {
     const now = new Date();
     await this.reservationTicketUseCase.changeStatusExcute(now);

@@ -6,12 +6,15 @@ import {
 import { TicketingService } from '../services/ticketing.service';
 import { TicketResponseDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
 import { TicketDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
-import { Transactional } from 'typeorm-transactional';
 import { AppDataSource } from '../../../config/typeorm-config';
+import { RedisLockService } from '../../../redis/redis-config';
 
 @Injectable()
 export class ReservationTicketUseCase {
-  constructor(@Inject() private readonly ticketingService: TicketingService) {}
+  constructor(
+    @Inject() private readonly ticketingService: TicketingService,
+    private readonly redisService: RedisLockService,
+  ) {}
 
   async changeStatusExcute(now: Date): Promise<void> {
     const queryRunner = AppDataSource.createQueryRunner();
@@ -34,13 +37,31 @@ export class ReservationTicketUseCase {
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
+    const lockKey = `concert:${ticketDto.userId}`;
+
     try {
-      const result = await this.ticketingService.reservationTicket(ticketDto);
-      await queryRunner.commitTransaction();
-      return result;
+      const lockAcquired = await this.redisService.acquireLock(lockKey);
+      if (!lockAcquired) {
+        throw new InternalServerErrorException('Could not acquire lock');
+      }
+
+      try {
+        const result = await this.ticketingService.reservationTicket(
+          queryRunner.manager,
+          ticketDto,
+        );
+        await queryRunner.commitTransaction();
+        return result;
+      } catch (error) {
+        await queryRunner.rollbackTransaction();
+        throw new InternalServerErrorException('Failed to reserve ticket');
+      } finally {
+        await this.redisService.releaseLock(lockKey);
+      }
     } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw new InternalServerErrorException('Failed to reserve ticket');
+      throw new InternalServerErrorException(
+        'Failed to execute reservation with lock',
+      );
     } finally {
       await queryRunner.release();
     }

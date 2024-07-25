@@ -27,5 +27,5 @@ export class UserBalanceLog {
   transactionType: `CHARGE` | `USE` | `REFUND`;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }
