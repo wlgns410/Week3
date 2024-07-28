@@ -12,7 +12,15 @@ export class UserLogRepositoryImplementation implements UserLogRepository {
   ) {}
 
   async insert(useLogDto: Partial<UserBalanceLog>): Promise<void> {
-    await this.userLogRepository.save(useLogDto);
+    const queryBuilder = this.userLogRepository
+      .createQueryBuilder('userBalanceLog')
+      .setLock('pessimistic_write');
+
+    await queryBuilder
+      .insert()
+      .into(UserBalanceLog)
+      .values(useLogDto)
+      .execute();
   }
 
   async getById(id: number): Promise<UserBalanceLog | undefined> {

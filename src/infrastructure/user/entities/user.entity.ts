@@ -29,17 +29,17 @@ export class User {
     enum: QueueStatus,
     nullable: true,
   })
-  queue_status: QueueStatus;
+  queueStatus: QueueStatus;
 
   @Column({ nullable: true })
   currentOrder: number;
 
   @Column({ nullable: true })
-  estimated_wait_time: number;
+  estimateWaitTime: number;
 
   @Column({ nullable: true })
-  expires_at: Date;
+  expiredAt: Date;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }

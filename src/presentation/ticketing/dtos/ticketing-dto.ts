@@ -6,19 +6,19 @@ export enum SeatStatus {
 
 export class TicketingResponseDto {
   id: number;
-  user_id: number;
-  concert_detail_id: number;
+  userId: number;
+  concertDetailId: number;
   title: string;
   place: number;
   price: number;
   status: SeatStatus;
-  created_at: Date;
-  expired_at: Date;
+  createdAt: Date;
+  expiredAt: Date;
 }
 
 export class TicketingRequestDto {
   user_id: number;
-  concert_detail_id: number;
+  concertDetailId: number;
   title: string;
   place: number;
   price: number;
@@ -41,9 +41,9 @@ export class TicketingResponse {
     public date: string,
     public seat: number,
     public concert: string,
-    public reservation_start_at: string,
-    public reservation_end_at: string,
-  ) { }
+    public reservationStartAt: string,
+    public reservationEndAt: string,
+  ) {}
 }
 
 export class TicketResponseDto {
@@ -51,6 +51,15 @@ export class TicketResponseDto {
   place: number;
   price: number;
   status: SeatStatus;
-  created_at: Date;
-  expired_at: Date;
+  createdAt: Date;
+  expiredAt: Date;
+}
+
+export class TicketingDto {
+  userId: number;
+  concertDetailId: number;
+  title: string;
+  place: number;
+  price: number;
+  expiredAt: Date;
 }

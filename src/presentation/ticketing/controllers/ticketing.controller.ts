@@ -13,7 +13,7 @@ import { TicketDto } from '../dtos/ticketing-dto';
 export class TicketingController {
   constructor(
     private readonly reservationTicketUseCase: ReservationTicketUseCase,
-  ) { }
+  ) {}
 
   @ApiOperation({ summary: 'Reserve a seat for a concert' })
   @SwaggerApiResponse({

@@ -10,7 +10,10 @@ import {
   TicketingRepositorySymbol,
 } from '../../../domain/ticketing/interfaces/ticketing-repository.interface';
 import { EntityManager } from 'typeorm';
-import { TicketResponseDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
+import {
+  TicketResponseDto,
+  TicketingDto,
+} from '../../../presentation/ticketing/dtos/ticketing-dto';
 import { TicketDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
 import {
   TicketingLogRepository,
@@ -38,24 +41,30 @@ export class TicketingService {
     private readonly concertDetailRepository: ConcertDetailRepository,
   ) {}
 
-  async reservationTicket(ticketDto: TicketDto): Promise<TicketResponseDto> {
-    const user = await this.userRepository.findUserById(ticketDto.userId);
-
+  async reservationTicket(
+    manager: EntityManager,
+    ticketDto: TicketDto,
+  ): Promise<TicketResponseDto> {
+    const user = await this.userRepository.findUserByIdWithLock(
+      manager,
+      ticketDto.userId,
+    );
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    if (user.queue_status !== 'ACTIVE') {
+    if (user.queueStatus !== 'ACTIVE') {
       throw new BadRequestException('User is not in an active queue status');
     }
 
     const now = new Date();
-    if (now.getTime() < user.estimated_wait_time) {
+    if (now.getTime() < user.estimateWaitTime) {
       throw new BadRequestException('User wait time has not passed');
     }
 
     const concertDetail =
-      await this.concertDetailRepository.findConcertDetailById(
+      await this.concertDetailRepository.findConcertDetailByIdWithLock(
+        manager,
         ticketDto.concertDetailId,
       );
 
@@ -63,52 +72,49 @@ export class TicketingService {
       throw new NotFoundException('Concert detail not found');
     }
 
-    if (concertDetail.available_seat <= 0) {
+    if (concertDetail.availableSeat <= 0) {
       throw new BadRequestException('No available seats');
     }
 
     if (
-      now < concertDetail.reservation_start_date ||
-      now > concertDetail.reservation_end_date
+      now < concertDetail.reservationStartDate ||
+      now > concertDetail.reservationEndDate
     ) {
       throw new BadRequestException(
         'Current time is not within the reservation period',
       );
     }
 
-    // 남은 좌석 차감 및 할당
-    const updatedAvailableSeat = concertDetail.available_seat - 1;
-
+    const expiredAt = new Date(Date.now() + 5 * 60 * 1000);
     // 예약 정보 생성
-    const ticketing = await this.ticketingRepository.insert({
-      user_id: ticketDto.userId,
-      concert_detail_id: ticketDto.concertDetailId,
+    const ticketing = await this.ticketingRepository.insert(manager, {
+      userId: ticketDto.userId,
+      concertDetailId: ticketDto.concertDetailId,
       title: concertDetail.title,
-      place: updatedAvailableSeat, // 남은 좌석 수를 문자열로 변환하여 할당
+      place: concertDetail.availableSeat, // 남은 좌석 수를 문자열로 변환하여 할당
       price: concertDetail.price,
-      status: ticketDto.status,
-      expired_at: new Date(now.getTime() + 5 * 60 * 1000), // 만료 시간 설정 (예: 5분 후)
+      expiredAt: expiredAt,
     });
-
     // 예약 로그 생성
-    await this.ticketingLogRepository.insert(ticketing.id);
+    await this.ticketingLogRepository.insert(manager, ticketing.id);
 
+    // 남은 좌석 차감 및 할당
+    const updatedAvailableSeat = concertDetail.availableSeat - 1;
     // 남은 좌석 차감
     await this.concertDetailRepository.updateAvailableSeats(
+      manager,
       concertDetail.id,
       updatedAvailableSeat,
     );
-
     // 응답 DTO 생성
     const ticketResponse: TicketResponseDto = {
       title: ticketing.title,
       place: ticketing.place,
       price: ticketing.price,
       status: ticketing.status,
-      created_at: ticketing.created_at,
-      expired_at: ticketing.expired_at,
+      createdAt: ticketing.createdAt,
+      expiredAt: ticketing.expiredAt,
     };
-
     return ticketResponse;
   }
 

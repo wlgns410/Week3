@@ -9,7 +9,7 @@ export class ConcertSeed {
       {
         title: 'Summer Fest',
         description: 'A fun summer music festival',
-        created_at: new Date(),
+        createdAt: new Date(),
       },
     ];
 

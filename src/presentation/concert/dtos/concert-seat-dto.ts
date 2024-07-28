@@ -8,5 +8,5 @@ export class ConcertSeatResponseDto {
   date?: Date;
 
   @ApiProperty({ example: 50, description: 'The number of available seats' })
-  available_seat?: number;
+  availableSeat?: number;
 }

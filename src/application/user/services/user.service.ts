@@ -59,9 +59,9 @@ export class UserService {
     if (expiredUsers.length > 0) {
       await Promise.all(
         expiredUsers.map(async (user) => {
-          user.queue_status = QueueStatus.EXPIRED;
-          user.estimated_wait_time = null;
-          user.expires_at = null;
+          user.queueStatus = QueueStatus.EXPIRED;
+          user.estimateWaitTime = null;
+          user.expiredAt = null;
           await this.userRepository.insert(user);
         }),
       );
@@ -116,28 +116,38 @@ export class UserService {
     await manager.save(newUserLog);
   }
 
-  async createQueue(userQueueDto: UserQueueDto): Promise<void> {
-    const user = await this.userRepository.findUserById(userQueueDto.userId);
+  async createQueue(
+    manager: EntityManager,
+    userQueueDto: UserQueueDto,
+  ): Promise<void> {
+    const user = await this.userRepository.findUserByIdWithLock(
+      manager,
+      userQueueDto.userId,
+    );
 
     const currentOrder = await this.userRepository.getNextOrder();
     const estimatedWaitTime = currentOrder * 10; // 1명당 대기시간 10초씩 기다린다고 가정
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 만료시간은 현재 시간으로부터 5분 후
 
-    user.queue_status = QueueStatus.ACTIVE;
+    user.queueStatus = QueueStatus.ACTIVE;
     user.currentOrder = currentOrder;
-    user.estimated_wait_time = estimatedWaitTime;
-    user.expires_at = expiresAt;
+    user.estimateWaitTime = estimatedWaitTime;
+    user.expiredAt = expiresAt;
 
-    await this.userRepository.insert(user);
+    await this.userRepository.updateUser(manager, user);
   }
 
   async paymentUser(
+    manager: EntityManager,
     userPaymentDto: UserPaymentDto,
   ): Promise<UserPaymentResponseDto> {
     const { userId, ticketingId } = userPaymentDto;
 
     // 사용자 조회
-    const user = await this.userRepository.findUserById(userId);
+    const user = await this.userRepository.findUserByIdWithLock(
+      manager,
+      userId,
+    );
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -150,7 +160,7 @@ export class UserService {
 
     // 현재 시간 확인
     const now = new Date();
-    if (now > ticketing.expired_at) {
+    if (now > ticketing.expiredAt) {
       throw new BadRequestException('The payment window has expired');
     }
 
@@ -161,7 +171,7 @@ export class UserService {
 
     // 티켓 상태 업데이트
     ticketing.status = SeatStatus.CONFIRMED;
-    await this.ticketingRepository.insert(ticketing);
+    await this.ticketingRepository.insert(manager, ticketing);
 
     // 잔액 로그 기록
     const userBalanceLog = new UserBalanceLogDto();
@@ -172,9 +182,9 @@ export class UserService {
 
     // 사용자 잔액 차감 && 유저 토큰 만료 처리
     user.balance -= ticketing.price;
-    user.queue_status = QueueStatus.EXPIRED;
-    user.estimated_wait_time = null;
-    user.expires_at = null;
+    user.queueStatus = QueueStatus.EXPIRED;
+    user.estimateWaitTime = null;
+    user.expiredAt = null;
     user.currentOrder = null;
     await this.userRepository.insert(user);
 

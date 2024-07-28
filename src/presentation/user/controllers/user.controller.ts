@@ -25,7 +25,6 @@ export class UserController {
   @ApiOperation({ summary: 'Create a new user' })
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
-    console.log('here1');
     await this.userUseCase.executeCreateUser(createUserDto.name);
   }
 

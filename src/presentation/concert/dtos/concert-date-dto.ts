@@ -13,7 +13,7 @@ export class ConcertResponseDto {
   price?: number;
 
   @ApiProperty({ example: 50, description: 'The limit count of attendees' })
-  limit_count?: number;
+  limitCount?: number;
 
   @ApiProperty({
     example: '2024-07-14T12:34:56Z',

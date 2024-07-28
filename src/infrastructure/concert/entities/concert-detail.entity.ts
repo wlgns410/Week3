@@ -14,36 +14,36 @@ export class ConcertDetail {
   id: number;
 
   @ManyToOne(() => Concert)
-  @JoinColumn({ name: 'concert_id' })
+  @JoinColumn({ name: 'concertId' })
   concert: Concert;
 
   @Column()
-  concert_id: number;
+  concertId: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 20 })
   place: string;
 
   @Column()
   price: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 20 })
   title: string;
 
   @Column()
-  limit_count: number;
+  limitCount: number;
 
   @Column()
-  available_seat: number;
+  availableSeat: number;
 
   @Column({ type: 'date' })
   date: Date;
 
   @Column({ type: 'date' })
-  reservation_start_date: Date;
+  reservationStartDate: Date;
 
   @Column({ type: 'date' })
-  reservation_end_date: Date;
+  reservationEndDate: Date;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 }

@@ -1,8 +1,8 @@
 export class UserQueueStatusDto {
-  queue_status?: QueueStatus;
+  queueStatus?: QueueStatus;
   currentOrder?: number;
-  estimated_wait_time?: number | null;
-  expires_at?: Date | null;
+  estimateWaitTime?: number | null;
+  expiredAt?: Date | null;
 }
 
 export class UserQueueDto {

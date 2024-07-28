@@ -7,16 +7,16 @@ export class ConcertDetailSeed {
 
     const concertDetails = [
       {
-        concert_id: 1,
-        place: 'Main Stage',
+        concertId: 6,
+        place: 'seoul',
         price: 5000,
-        title: 'Summer Fest Day 1',
-        limit_count: 50,
-        available_seat: 50,
+        title: 'Summer Fest',
+        limitCount: 50,
+        availableSeat: 50,
         date: new Date('2024-08-01'),
-        reservation_start_date: new Date('2024-07-25'),
-        reservation_end_date: new Date('2024-07-31'),
-        created_at: new Date(),
+        reservationStartDate: new Date('2024-07-25'),
+        reservationEndDate: new Date('2024-07-31'),
+        createdAt: new Date(),
       },
     ];
 

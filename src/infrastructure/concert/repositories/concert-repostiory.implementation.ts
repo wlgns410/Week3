@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThan, Repository } from 'typeorm';
+import { EntityManager, MoreThan, Repository } from 'typeorm';
 import { ConcertDetail } from '../entities/concert-detail.entity';
 import { ConcertDetailRepository } from '../../../domain/concert/interfaces/concert-detail-repository.interface';
 
@@ -15,10 +15,10 @@ export class ConcertDetailRepositoryImplementation
 
   async getConcertList(concertId: number): Promise<Partial<ConcertDetail>[]> {
     return await this.concertDetailRepository.find({
-      select: ['place', 'price', 'limit_count', 'date'],
+      select: ['place', 'price', 'limitCount', 'date'],
       where: {
-        concert_id: concertId,
-        available_seat: MoreThan(0),
+        concertId: concertId,
+        availableSeat: MoreThan(0),
       },
     });
   }
@@ -27,7 +27,7 @@ export class ConcertDetailRepositoryImplementation
     concertDetailId: number,
   ): Promise<Partial<ConcertDetail>[]> {
     return await this.concertDetailRepository.find({
-      select: ['available_seat', 'date'],
+      select: ['availableSeat', 'date'],
       where: {
         id: concertDetailId,
       },
@@ -42,12 +42,23 @@ export class ConcertDetailRepositoryImplementation
     });
   }
 
+  async findConcertDetailByIdWithLock(
+    manager: EntityManager,
+    concertDetailId: number,
+  ): Promise<ConcertDetail | undefined> {
+    return await manager.findOne(ConcertDetail, {
+      where: { id: concertDetailId },
+      lock: { mode: 'pessimistic_write' },
+    });
+  }
+
   async updateAvailableSeats(
+    manager: EntityManager,
     concertDetailId: number,
     availableSeat: number,
   ): Promise<void> {
-    await this.concertDetailRepository.update(concertDetailId, {
-      available_seat: availableSeat,
+    await manager.update(ConcertDetail, concertDetailId, {
+      availableSeat: availableSeat,
     });
   }
 }

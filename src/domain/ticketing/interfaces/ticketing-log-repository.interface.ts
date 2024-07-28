@@ -6,5 +6,5 @@ export const TicketingLogRepositorySymbol = Symbol.for(
 );
 
 export interface TicketingLogRepository {
-  insert(ticketing_id: number): Promise<TicketLog>;
+  insert(manager: EntityManager, ticketingId: number): Promise<TicketLog>;
 }

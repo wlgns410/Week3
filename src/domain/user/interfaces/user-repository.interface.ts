@@ -5,7 +5,12 @@ export const UserRepositorySymbol = Symbol.for('UserRepository');
 
 export interface UserRepository {
   insert(userDto: Partial<User>): Promise<void>;
+  updateUser(manager: EntityManager, userDto: Partial<User>): Promise<void>;
   findUserById(userId: number): Promise<User | undefined>;
+  findUserByIdWithLock(
+    manager: EntityManager,
+    userId: number,
+  ): Promise<User | undefined>;
   getUserBalance(userId: number): Promise<number>;
   findExpiredUsers(now: Date): Promise<User[]>;
   getQueueStatus(userId: number): Promise<Partial<User> | undefined>;

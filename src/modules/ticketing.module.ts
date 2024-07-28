@@ -16,10 +16,12 @@ import { ConcertDetailRepositorySymbol } from '../domain/concert/interfaces/conc
 import { ConcertDetailRepositoryImplementation } from '../infrastructure/concert/repositories/concert-repostiory.implementation';
 import { TicketingLogRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-log-repository.interface';
 import { TicketingLogRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-log-repository.implementation';
+import { RedisModule } from '../redis/redis.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Ticketing, TicketLog, User, ConcertDetail]),
+    RedisModule,
   ],
   providers: [
     ReservationTicketUseCase,
@@ -63,4 +65,4 @@ import { TicketingLogRepositoryImplementation } from '../infrastructure/ticketin
   ],
   controllers: [TicketingController],
 })
-export class TicketingModule { }
+export class TicketingModule {}
