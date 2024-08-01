@@ -12,4 +12,5 @@ export class UserQueueDto {
 export enum QueueStatus {
   ACTIVE = 'ACTIVE',
   EXPIRED = 'EXPIRED',
+  WAITING = 'WAITING',
 }

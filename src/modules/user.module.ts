@@ -6,6 +6,8 @@ import { UserBalanceLog } from '../infrastructure/user/entities/user-balance-log
 import { Ticketing } from '../infrastructure/ticketing/entities/ticketing.entity';
 import { UserService } from '../application/user/services/user.service';
 import { UserUseCase } from '../application/user/use-case/user.use-case';
+import { QueueUseCase } from '../application/user/use-case/queue.use-case';
+import { QueueService } from '../application/user/services/queue.service';
 import { UserRepositorySymbol } from '../domain/user/interfaces/user-repository.interface';
 import { UserLogRepositorySymbol } from '../domain/user/interfaces/user-log-repository.interface';
 import { UserRepositoryImplementation } from '../infrastructure/user/repositories/user-repository.implementation';
@@ -13,6 +15,8 @@ import { UserLogRepositoryImplementation } from '../infrastructure/user/reposito
 import { TicketingRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-repository.interface';
 import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-repository.implementation';
 import { RedisModule } from '../redis/redis.module';
+import { QueueController } from '../presentation/user/controllers/queue.controller';
+import { QueueScheduler } from '../presentation/user/schedulers/queue.scheduler';
 
 @Module({
   imports: [
@@ -22,6 +26,9 @@ import { RedisModule } from '../redis/redis.module';
   providers: [
     UserUseCase,
     UserService,
+    QueueUseCase,
+    QueueService,
+    QueueScheduler,
     {
       provide: UserRepositorySymbol,
       useClass: UserRepositoryImplementation,
@@ -38,6 +45,8 @@ import { RedisModule } from '../redis/redis.module';
   exports: [
     UserService,
     UserUseCase,
+    QueueUseCase,
+    QueueService,
     {
       provide: UserRepositorySymbol,
       useClass: UserRepositoryImplementation,
@@ -51,6 +60,6 @@ import { RedisModule } from '../redis/redis.module';
       useClass: TicketingRepositoryImplementation,
     },
   ],
-  controllers: [UserController],
+  controllers: [UserController, QueueController],
 })
 export class UserModule {}

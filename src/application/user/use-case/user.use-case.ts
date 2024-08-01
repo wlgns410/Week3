@@ -11,7 +11,7 @@ import {
 } from '../../../presentation/user/dtos/user-payment-dto';
 import { Transactional } from 'typeorm-transactional';
 import { AppDataSource } from '../../../config/typeorm-config';
-import { RedisLockService } from '../../../redis/redis-config';
+import { RedisLockService } from '../../../redis/redis-lock.service';
 
 @Injectable()
 export class UserUseCase {
@@ -78,14 +78,18 @@ export class UserUseCase {
     }
   }
 
-  async executeCreateQueue(userQueueDto: UserQueueDto): Promise<void> {
+  async executeCreateQueue(userQueueDto: UserQueueDto): Promise<string> {
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      await this.userService.createQueue(queryRunner.manager, userQueueDto);
+      const token = await this.userService.createQueue(
+        queryRunner.manager,
+        userQueueDto,
+      );
       await queryRunner.commitTransaction();
+      return token;
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException('Failed to create queue');

@@ -32,6 +32,7 @@ export class TicketDto {
   place: number;
   price: number;
   status: SeatStatus;
+  token?: string;
 }
 
 export class TicketingResponse {
