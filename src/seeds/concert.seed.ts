@@ -7,7 +7,7 @@ export class ConcertSeed {
 
     const concerts = [
       {
-        title: 'Summer Fest',
+        title: 'Summer Fest3',
         description: 'A fun summer music festival',
         createdAt: new Date(),
       },

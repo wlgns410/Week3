@@ -7,12 +7,12 @@ export class ConcertDetailSeed {
 
     const concertDetails = [
       {
-        concertId: 6,
+        concertId: 8,
         place: 'seoul',
         price: 5000,
         title: 'Summer Fest',
-        limitCount: 50,
-        availableSeat: 50,
+        limitCount: 100000,
+        availableSeat: 100000,
         date: new Date('2024-08-01'),
         reservationStartDate: new Date('2024-07-25'),
         reservationEndDate: new Date('2024-07-31'),

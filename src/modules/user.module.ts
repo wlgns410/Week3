@@ -17,11 +17,13 @@ import { TicketingRepositoryImplementation } from '../infrastructure/ticketing/r
 import { RedisModule } from '../redis/redis.module';
 import { QueueController } from '../presentation/user/controllers/queue.controller';
 import { QueueScheduler } from '../presentation/user/schedulers/queue.scheduler';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, UserBalanceLog, Ticketing]),
     RedisModule,
+    JwtModule,
   ],
   providers: [
     UserUseCase,

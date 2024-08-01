@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, LessThan, Repository } from 'typeorm';
 import { QueueStatus, User } from '../entities/user.entity';
 import { UserRepository } from '../../../domain/user/interfaces/user-repository.interface';
+import { Queue } from '../../../domain/user/models/queue.model';
 
 @Injectable()
 export class UserRepositoryImplementation implements UserRepository {

@@ -49,6 +49,7 @@ export class TicketingService {
       manager,
       ticketDto.userId,
     );
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -95,6 +96,7 @@ export class TicketingService {
       price: concertDetail.price,
       expiredAt: expiredAt,
     });
+
     // 예약 로그 생성
     await this.ticketingLogRepository.insert(manager, ticketing.id);
 
@@ -106,6 +108,7 @@ export class TicketingService {
       concertDetail.id,
       updatedAvailableSeat,
     );
+
     // 응답 DTO 생성
     const ticketResponse: TicketResponseDto = {
       title: ticketing.title,
@@ -115,6 +118,7 @@ export class TicketingService {
       createdAt: ticketing.createdAt,
       expiredAt: ticketing.expiredAt,
     };
+
     return ticketResponse;
   }
 

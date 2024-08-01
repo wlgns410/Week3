@@ -17,11 +17,15 @@ import { ConcertDetailRepositoryImplementation } from '../infrastructure/concert
 import { TicketingLogRepositorySymbol } from '../domain/ticketing/interfaces/ticketing-log-repository.interface';
 import { TicketingLogRepositoryImplementation } from '../infrastructure/ticketing/repositories/ticketing-log-repository.implementation';
 import { RedisModule } from '../redis/redis.module';
+import { UserModule } from '../modules/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Ticketing, TicketLog, User, ConcertDetail]),
     RedisModule,
+    UserModule,
+    JwtModule,
   ],
   providers: [
     ReservationTicketUseCase,
