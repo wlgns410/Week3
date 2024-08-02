@@ -5,6 +5,7 @@
 3. [API-DOCS](https://week3.gitbook.io/queue)
 4. [Sequence_diagram](#sequence_diagram)
 5. [Lock 비교](#낙관적락vs비관적락vs분산락)
+6. [캐시 전략](Docs/cache.md)
 
 <br>
 
