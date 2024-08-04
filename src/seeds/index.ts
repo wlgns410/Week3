@@ -1,7 +1,7 @@
 import { AppDataSource } from '../config/typeorm-config';
 import { ConcertSeed } from './concert.seed';
-import { ConcertDetailSeed } from './concertDetail.seed';
 import { UserSeed } from './user.seed';
+import { ConcertDetailSeed } from './concertDetail.seed';
 
 export const runSeeds = async () => {
   try {

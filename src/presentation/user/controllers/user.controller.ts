@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { UserUseCase } from '../../../application/user/use-case/user.use-case';
 import { UserQueueDto } from '../../../presentation/user/dtos/user-queue-status-dto';
 import { UserBalanceChargeDto } from '../../../presentation/user/dtos/user-balance-dto';
@@ -8,6 +16,8 @@ import {
   UserPaymentResponseDto,
 } from '../dtos/user-payment-dto';
 import { ApiResponse } from '../../../common/api-response';
+import { AuthGuard } from '../../../libs/guards';
+import { User } from '../../../libs/decorators';
 
 class CreateUserDto {
   name: string;
@@ -54,9 +64,14 @@ export class UserController {
 
   @ApiOperation({ summary: 'Issue a user queue token' })
   @ApiBody({ type: UserQueueDto })
+  @UseGuards(AuthGuard)
   @Post('queue-token')
-  async issueUserQueue(@Body() userQueueDto: UserQueueDto): Promise<void> {
-    await this.userUseCase.executeCreateQueue(userQueueDto);
+  async issueUserQueue(
+    @User() { userId }: { userId: string },
+  ): Promise<string> {
+    return await this.userUseCase.executeCreateQueue({
+      userId: Number(userId),
+    });
   }
 
   @ApiOperation({ summary: 'User payment' })

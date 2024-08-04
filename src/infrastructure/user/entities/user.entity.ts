@@ -8,6 +8,7 @@ import {
 export enum QueueStatus {
   ACTIVE = 'ACTIVE',
   EXPIRED = 'EXPIRED',
+  WAITING = 'WAITING',
 }
 
 @Entity()
@@ -28,6 +29,7 @@ export class User {
     type: 'enum',
     enum: QueueStatus,
     nullable: true,
+    default: QueueStatus.WAITING,
   })
   queueStatus: QueueStatus;
 

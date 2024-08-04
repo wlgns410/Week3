@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormConfig } from './config/typeorm-config';
 import { CommonModule } from './common/common.module';
 import { RedisModule } from './redis/redis.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { RedisModule } from './redis/redis.module';
     DatabaseModule,
     CommonModule,
     RedisModule,
+    JwtModule.register({
+      secret: 'test',
+      signOptions: { expiresIn: '1h' },
+    }),
   ],
   controllers: [],
   providers: [],

@@ -34,6 +34,7 @@ import { SeatStatus } from '../../../presentation/ticketing/dtos/ticketing-dto';
 import { EntityManager } from 'typeorm';
 import { User } from '../../../infrastructure/user/entities/user.entity';
 import { UserBalanceLog } from '../../../infrastructure/user/entities/user-balance-log.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -44,6 +45,7 @@ export class UserService {
     private readonly userLogRepository: UserLogRepository,
     @Inject(TicketingRepositorySymbol)
     private readonly ticketingRepository: TicketingRepository,
+    private readonly jwtService: JwtService,
   ) {}
   async createUser(name: string): Promise<void> {
     const userDto = { name };
@@ -74,22 +76,6 @@ export class UserService {
     return await this.userRepository.getQueueStatus(userId);
   }
 
-  // async chargeBalance(userBalanceDto: UserBalanceChargeDto): Promise<void> {
-  //   const user = await this.userRepository.findUserById(userBalanceDto.userId);
-
-  //   user.balance += userBalanceDto.balance;
-  //   await this.userRepository.insert(user);
-
-  //   // 수정필요
-  //   const newUserLog: UserBalanceLogDto = {
-  //     userId: userBalanceDto.userId,
-  //     amount: userBalanceDto.balance,
-  //     transactionType: TransactionType.CHARGE,
-  //   };
-
-  //   await this.userLogRepository.insert(newUserLog);
-  // }
-
   async chargeBalance(
     userBalanceDto: UserBalanceChargeDto,
     manager: EntityManager,
@@ -119,7 +105,7 @@ export class UserService {
   async createQueue(
     manager: EntityManager,
     userQueueDto: UserQueueDto,
-  ): Promise<void> {
+  ): Promise<string> {
     const user = await this.userRepository.findUserByIdWithLock(
       manager,
       userQueueDto.userId,
@@ -135,6 +121,13 @@ export class UserService {
     user.expiredAt = expiresAt;
 
     await this.userRepository.updateUser(manager, user);
+
+    const payload = {
+      userId: user.id,
+      queueStatus: user.queueStatus,
+      expiresAt: expiresAt,
+    };
+    return this.jwtService.sign(payload);
   }
 
   async paymentUser(
