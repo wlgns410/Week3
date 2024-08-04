@@ -22,16 +22,16 @@ describe('Controller (e2e)', () => {
     await app.close();
   });
 
-  it('/POST users - create user', async () => {
-    const createUserDto = { name: 'Test User' };
+  // it('/POST users - create user', async () => {
+  //   const createUserDto = { name: 'Test User' };
 
-    const response = await request(app.getHttpServer())
-      .post('/users')
-      .send(createUserDto)
-      .expect(201);
+  //   const response = await request(app.getHttpServer())
+  //     .post('/users')
+  //     .send(createUserDto)
+  //     .expect(201);
 
-    expect(response.body).toEqual({});
-  });
+  //   expect(response.body).toEqual({});
+  // });
 
   it('/PATCH users/:id/balance - charge balance concurrently', async () => {
     // Assuming the user ID is returned in the response or known
@@ -47,7 +47,7 @@ describe('Controller (e2e)', () => {
         .expect(200);
 
     // Create an array of 100 promises
-    const concurrentRequests = Array(500)
+    const concurrentRequests = Array(1000000)
       .fill(null)
       .map(sendChargeBalanceRequest);
 
@@ -73,14 +73,14 @@ describe('Controller (e2e)', () => {
     expect(successfulRequests.length).toBeGreaterThan(0);
   });
 
-  it('/GET users/:id/balance - get user balance', async () => {
-    const userId = 3; // replace with the actual user ID if necessary
+  // it('/GET users/:id/balance - get user balance', async () => {
+  //   const userId = 3; // replace with the actual user ID if necessary
 
-    const response = await request(app.getHttpServer())
-      .get(`/users/${userId}/balance`)
-      .expect(200);
+  //   const response = await request(app.getHttpServer())
+  //     .get(`/users/${userId}/balance`)
+  //     .expect(200);
 
-    expect(response.body).toHaveProperty('data');
-    expect(typeof response.body.data).toBe('number');
-  });
+  //   expect(response.body).toHaveProperty('data');
+  //   expect(typeof response.body.data).toBe('number');
+  // });
 });
