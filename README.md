@@ -6,6 +6,7 @@
 4. [Sequence_diagram](#sequence_diagram)
 5. [Lock 비교](#낙관적락vs비관적락vs분산락)
 6. [캐시 전략](Docs/cache.md)
+7. [인덱스 전략](Docs/index.md)
 
 <br>
 
