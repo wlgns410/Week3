@@ -1,6 +1,5 @@
 import { EntityManager } from 'typeorm';
 import { Ticketing } from '../../../infrastructure/ticketing/entities/ticketing.entity';
-import { TicketingDto } from '../../../presentation/ticketing/dtos/ticketing-dto';
 
 export const TicketingRepositorySymbol = Symbol.for('TicketingRepository');
 

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Ticketing } from '../infrastructure/Ticketing/entities/ticketing.entity';
+import { Ticketing } from '../infrastructure/ticketing/entities/ticketing.entity';
 import { ConcertDetail } from '../infrastructure/concert/entities/concert-detail.entity';
-import { TicketLog } from '../infrastructure/Ticketing/entities/ticket-log.entity';
-import { User } from '../infrastructure/User/entities/user.entity';
+import { TicketLog } from '../infrastructure/ticketing/entities/ticket-log.entity';
+import { User } from '../infrastructure/user/entities/user.entity';
 import { TicketingService } from '../application/ticketing/services/ticketing.service';
 import { TicketingController } from '../presentation/ticketing/controllers/ticketing.controller';
 import { ReservationTicketUseCase } from '../application/ticketing/use-case/reservation-ticket.use-case';

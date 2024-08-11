@@ -1,10 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { initializeTransactionalContext } from 'typeorm-transactional-cls-hooked';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { KAFKA_OPTION } from './kafka/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    ...KAFKA_OPTION,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('concert')
     .setDescription('The concert API description')
@@ -13,6 +19,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(3000);
+  await app.listen(5001);
 }
 bootstrap();
