@@ -15,6 +15,8 @@ export const typeormConfig: TypeOrmModuleOptions = {
   entities: [join(__dirname, '../**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '../migrations/*{.ts,.js}')],
   synchronize: true,
+  retryAttempts: 5, // 5번 재시도
+  retryDelay: 3000, // 3초 간격으로 재시도
 };
 
 export const dataSourceOptions: DataSourceOptions =

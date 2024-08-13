@@ -10,6 +10,8 @@ import { typeormConfig } from './config/typeorm-config';
 import { CommonModule } from './common/common.module';
 import { RedisModule } from './redis/redis.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule } from '@nestjs/microservices';
+import { KAFKA_OPTION } from './kafka/config';
 
 @Module({
   imports: [
@@ -25,6 +27,12 @@ import { JwtModule } from '@nestjs/jwt';
       secret: 'test',
       signOptions: { expiresIn: '1h' },
     }),
+    ClientsModule.register([
+      {
+        name: 'KAFKA_CLIENT',
+        ...KAFKA_OPTION,
+      },
+    ]),
   ],
   controllers: [],
   providers: [],
